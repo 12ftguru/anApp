@@ -1,0 +1,135 @@
+<html>
+<head>
+  <title><?=$title;?></title>
+<link rel="shortcut icon" href="<?=$self;?>images/favicon.ico" >
+  <link rel="stylesheet" type="text/css" href="<?=$extLocation;?>/resources/css/ext-all.css"  />
+  <link rel="stylesheet" type="text/css" href="<?=$extLocation;?>/resources/css/xtheme-gray.css"  />
+    <link rel="stylesheet" type="text/css" href="styles/loginstyle.css"  />
+  <script type="text/javascript" src="<?=$extLocation;?>/adapter/ext/ext-base.js"></script>
+  <script type="text/javascript" src="<?=$extLocation;?>/ext-all-debug.js"></script>
+  <script type="text/javascript">
+/* reference local blank image */
+Ext.BLANK_IMAGE_URL = '<?=$extLocation;?>/resources/images/default/s.gif';
+
+Ext.onReady(function () {
+    /*         var anApp = new Ext.ux.anApp(); */
+    /*         anApp.init(); */
+        
+    var loginForm = new Ext.FormPanel({
+      labelWidth: 75, // label settings here cascade unless overridden
+      frame:true,
+      title: 'Log in to <?=$title;?>',
+      bodyStyle:'padding:5px 5px 0',
+      width: 350,
+      defaults: {width: 230},
+      defaultType: 'textfield',
+       onSubmit: Ext.emptyFn,
+        submit: function(e) {
+            this.form.getEl().dom.submit();
+            
+        } ,
+      items: [{
+        fieldLabel: 'Login Name',
+        name: 'username',
+        allowBlank:false
+      },{
+        fieldLabel: 'Password',
+        name: 'password',
+          allowBlank:false,
+          inputType: 'password'
+      }<?php if ( $badLogin ):?>
+              ,{
+                  xtype: 'panel',
+                    id: 'loginError',
+                  width: 305,
+                  height: 20,
+                    html: '<div class="x-login-invalid" style="line-height:18px;vertical-align:middle;color:red;margin-left:18px;height:18px;">The login information you entered was incorrect.</div><div class="x-form-invalid-icon" style="top: 1px; visibility: visible;"/>'
+                  }
+              <?php endif;?>
+              ],
+      buttons: [{
+        text: 'Login',
+        handler: function (e) {
+            loginForm.submit();
+        }
+      }]
+    });
+
+
+
+loginForm.render(Ext.get('loginBox'));
+var loginKM = new Ext.KeyMap(loginForm.getEl(), [{
+    key: Ext.EventObject.ENTER,
+    fn: function (e) {
+        loginForm.submit();
+        },
+    scope: loginForm
+    }]);
+});
+
+
+var CapsLock = {
+	init: function() {
+		var id = Ext.id();
+		this.alertBox = Ext.DomHelper.append(document.body,{
+			tag: 'div',
+			style: 'width: 18em',
+			children: [{
+				tag: 'div',
+				style: 'text-align: center; color: red;',
+				html: 'Your Caps Lock key is on.<br />This may cause your password<br />to be input incorrectly.',
+				id: id
+			}]
+		}, true);
+		Ext.fly(id).boxWrap();
+		this.alertBox.hide();
+		var pwds = Ext.query("INPUT[type='password']");
+		for(var i = 0; i < pwds.length; i++) {
+			Ext.get(pwds[i].id).on(
+				'keypress',
+				this.keypress.createDelegate(this,pwds[i],true),
+				this
+			);
+		}
+	},
+	keypress: function(e, el) {
+		var charCode = e.getCharCode();
+		if(
+			(e.shiftKey && charCode >= 97 && charCode <= 122) ||
+			(!e.shiftKey && charCode >= 65 && charCode <= 90)
+		){
+			this.showWarning(el);
+		} else {
+			this.hideWarning();
+		}
+	},
+	showWarning: function(el) {
+		var x = Ext.fly(el).getX();
+		var width = Ext.fly(el).getWidth();
+		var y = Ext.fly(el).getY();
+		this.alertBox.setXY([x - width - 6,y + 25]);
+		this.alertBox.show();
+	},
+	hideWarning: function() {
+		this.alertBox.hide();
+	}
+}
+Ext.onReady(CapsLock.init, CapsLock, true);
+
+  </script>
+</head>
+<body>
+<div id="titlerow" class="homepagerow">
+<table align="center" width=900 padding="10" cellspacing="0">
+	<tr>
+		<td class="titletext" valign="middle"><div id="welcome">
+		<img src="images/logo.jpg" alt="" width="190" height="86" hspace="10" vspace="10" border="0">
+		<h3><?=$config->defaultTitle;?></h3>
+		</div>
+		</td></p>
+		<td valign="middle"><div id="loginBox"></div></td>
+	</tr>
+</table>
+</div>
+</body>
+</html>

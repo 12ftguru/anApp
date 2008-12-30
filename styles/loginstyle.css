@@ -1,0 +1,97 @@
+.x-layout-inactive-content{
+    position:absolute;
+    left:-10000px;
+    top:-10000px;
+    visibility:hidden;
+}
+a {color: #FFFFFF;
+		  font : bold verdana,sans-serif;
+		  text-decoration : none;}
+a:active {color: #CC9900;
+		  font : bold verdana,sans-serif;
+		  text-decoration : none;}
+a:visited {color: #CCCCCC;
+		  font : bold verdana,sans-serif;
+		  text-decoration : none;}
+a:hover {color: #CC9900;
+		  font : bold verdana,sans-serif;
+		  text-decoration : underline;}
+
+#navigation {
+	border-bottom: 5px solid white;
+}
+
+.homepagerow td {
+	border-bottom: 1px solid white;
+}
+.titletext {
+font-size: xx-large;
+border-left: 1px solid white;
+text-align: center;
+padding: 4px;
+}
+#titlerow {
+   padding: 1.3em;
+}
+.titlemiddle {
+	     font-size: .75em;
+	     padding: 2em;
+	     border-left: 1px solid #9E9E9E;
+}
+.footertext p {
+
+	     border-right: 1px solid #9E9E9E;
+	     border-left: 1px solid #9E9E9E;
+	     margin-left: 2em;
+	     margin-right: 2em;
+	     padding: 1em;
+}
+
+#logoline td :first-child {
+	  border-top: 1px solid #8F8F8F;
+	  border-bottom: 1px solid #8F8F8F;
+	  padding-left: 1em;
+	  padding-right: 1em;
+	  padding-top: .25em;
+	  padding-bottom: .25em;
+}
+
+#logoline td img:first-child {
+	  border: none;
+}
+#logoline ul {
+	  list-style-type: disc;
+	  padding-top: 0.5em;
+	  padding-bottom: 1em;
+	  padding-left: 3em;
+	  padding-right: 1em;
+}
+
+#logoline td p:first-child, #logoline td b:first-child,  #logoline td li:first-child {
+	  border-top: none;
+	  border-bottom: none;
+}
+
+#logoline ul li:first-child {
+	  padding: 0;
+}
+
+.anapptext {
+font-size:.9em;
+border-right: 1px solid white;
+padding: 4px;
+}
+
+.slugText {
+font-size:.9em;
+border-left: 1px solid white;
+padding: 4px;
+}
+
+
+
+.imageright {
+
+		 padding: 1em;
+
+}

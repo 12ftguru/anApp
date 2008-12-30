@@ -1,0 +1,45 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title><?=$title;?></title>
+    <style type="text/css">
+      #load-thingy{position:absolute;display:table;left:0;top:0;width:100%;height:100%;z-index:19999;}
+      #loading-mask{position:absolute;left:0;top:0;width:100%;height:100%;z-index:20000;background-color:white;}
+      #loading{position:absolute;left:0;top:0;z-index:20001;height:100%;width:100%;}
+      .loading-beachball{position:absolute;left:0;top:0;z-index:20001;height:100%;width:100%;}
+      .loading-beachball table{position:absolute;left:0;top:0;z-index:20001;height:100%;width:100%;}
+    </style>
+    <link rel="shortcut icon" href="<?=$config->self;?>images/favicon.ico" >
+    <link rel="stylesheet" type="text/css" href="<?=$extLocation;?>/resources/css/ext-all.css"  />
+    <link rel="stylesheet" type="text/css" href="<?=$extLocation;?>/resources/css/xtheme-gray.css"  />
+    <link rel="stylesheet" type="text/css" href="<?=$config->self;?>styles/astyle.css"  />
+    <script type="text/javascript" src="<?=$config->extLocation;?>/adapter/ext/ext-base.js"></script>
+    <script type="text/javascript" src="<?=$config->extLocation;?>/ext-all.js"></script>
+  <script type="text/javascript" src="js/anApp.Overrides.js"></script>
+  <script type="text/javascript" src="js/anApp.js"></script>
+</head>
+<body id="anAppMain">
+<div id="load-thingy">
+<div id="loading-mask"></div>
+  <div id="loading" >
+    <div class="loading-beachball"><table border=0 width=100% style="height: 100%"><tr><td width="100%" align=center valign=center><img src="images/ajax-loader.gif" width="50" height="50" style="margin-right:8px;" align="absmiddle"/>Loading <?=$title;?>...</td></tr></table></div>
+  </div>
+</div>
+<div id="hideme"  class="x-layout-inactive-content" ></div>
+  <script type="text/javascript">
+// reference local blank image
+Ext.BLANK_IMAGE_URL = '<?=$extLocation;?>/resources/images/default/s.gif';
+console.log();
+Ext.onReady(function () {
+  
+//    anApp.preloadModules = ['dependencies'];
+    anApp.init();
+    setTimeout(function(){
+        Ext.get('loading').remove();
+        Ext.get('loading-mask').fadeOut({remove:true});
+        Ext.get('load-thingy').remove();
+    }, 250);
+});
+  </script>
+</body>
+</html>

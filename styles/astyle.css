@@ -1,0 +1,27 @@
+.x-layout-inactive-content{
+    position:absolute;
+    left:-10000px;
+    top:-10000px;
+    visibility:hidden;
+}
+#debugarea {
+    position:absolute;
+    left:-10000px;
+    top:-10000px;
+    visibility:hidden;
+}
+.debugstring {
+    font-style: italic;
+    color: #000088;
+}
+.debugPre {
+   font-style: normal;	  
+}
+.error {
+       font-size: large;
+       font-weight: bold;
+       padding-left: 1.75em;
+       padding-right: 1.75em;
+       padding-top: 0.75em;
+       padding-bottom: 0.75em;
+}

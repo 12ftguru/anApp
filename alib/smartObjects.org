@@ -1,0 +1,183 @@
+note: User objects need to know about OLD_PASSWORD
+
+Smart Objects
+
+Smart objects are objects tied directly to a single record in a
+db. Each extends the smartObject abstract class.
+
+They may be created three ways:
+
+$myObj = new mySmartObject(); // Creates uninitialized object. Does not query the db.
+
+$myObj = new mySmartObject('uniqueID'); // Uses the builtin CRUD sql statements to get 'uniqueID' from the db;
+
+$myObj = new mySmartObject(array('key1' => 'val1', 'key2' => 'val2'));
+
+
+* SQL Statements:
+
+SQL statements are defined by extending smartObject:
+
+class mySmartObject extends smartObject {
+   $read = 'select * from myTable';
+   $delete = 'delete from myTable where active = 0';
+   $create = array(
+                   'sql' => 'insert into myTable set id = ?, value = ?',
+		   'types' => 'is',
+		   'vars' => array('id', 'name')
+                  );
+   $update = array(
+                   'sql' => 'update myTable set value = ? where id = ?',
+		   'types' => 'si',
+		   'vars' => array('name', 'id')
+                  );
+   $idField = 'id'
+}
+
+Read and Delete statements are strings. Create and Update statements
+are arrays because smartObjects use prepared statements to do their
+inserting/updating. These prepared statments are static, and used by
+all smartObjects of the same class.
+
+If you specify an idColumn, then when we use the read and delete SQL
+statements we will append "where `".$this->idField."` =
+'".$this->{$this->idField}."'" or "AND "... depending on if you
+already have a where in your sql statement. Example:
+
+$myObj->id = 'foo';
+
+Would cause the above object to use:
+
+select * from myTable where `id` = 'foo';
+
+to read and:
+
+delete from myTable where active = 0 and `id` = 'foo';
+
+If you do not specify an idField, we use the read and delete
+statements as-is.
+
+
+
+
+* Foreign Keys
+
+  If you extend your smartObject with foreignKeys you can nest smart objects.
+
+  Example data:
+
+  Table 1
+  | id | data | table2ForeignKey |
+  |  1 | foo  |                3 |
+  |  2 | bar  |                4 |
+
+  Table 2
+  | id | data |
+  |  3 | baz  |
+  |  4 | ding |
+
+  class mySmartObject1 extends smartObject {
+   /*    $read/$delete/$create/$update blah */
+    $foreignKeys = array('arbritraryName' => array('key' => 'table2ForeignKey',
+                                           'type' => 'mySmartObject2' ) );
+					   }
+
+  class mySmartObject2 extends smartObject {
+   /*    $read/$delete/$create/$update blah */
+  }
+ 
+  Now when you do:
+
+  $myObj = new mySmartObject1(1);
+
+  print $myObj->arbitraryName->data; # prints baz
+  print $myObj->table2ForeignKey; # prints 3
+  $myObj->arbitraryName->data = 'bat';
+  $myObj->arbitraryName->save(); #Yes, Virginia, there is a Santa.
+
+
+* Formatting:
+  
+Table 1
+  | id | name | details     |
+  |  1 | foo  | lorem ipsum |
+  |  2 | bar  | dolor amet  |
+
+  class mySmartObject3 extends smartObject {
+   /*    $read/$delete/$create/$update blah */
+   $format = array(
+                   'string' => 'SmartObject3 %d: %s\n%s'
+		   'vars' => array('id', 'name', 'details')
+   );
+   }
+
+
+   $myObj = new mySmartObject3(1);
+   print $myObj;
+   
+Prints:
+
+SmartObject3 1: foo
+lorem ipsum
+
+
+* Usage:
+
+** CRUD
+*** Create
+You may create a new record in the db as follows:
+
+$myNewObj = new mySmartObject();
+$myNewObj->foo = 'bar';
+if ($myNewObj->create() === FALSE) {
+print "DB Error(".$myNewObj->errno."): ".$myNewObj->error."\n";
+}
+$newInsertID = $myNewObj->insertID;
+
+*** Read
+If you do not create an object with an id or key/value pairs, you may specify an ID later. You may also change an ID to reread from the db:
+
+$myObj->id = 2;
+if ($myObj->read()) {
+#blah
+} else {
+  print "Error: ".$myObj->db->error;
+}
+
+*** Update
+After creation via one of the methods above, you may access any of the db columns as attributes on the object:
+
+  print $myObj->column1; #prints bar
+
+You may then change the attributes and then save the object:
+
+$myObj->column1 = 'foo';
+if ($myObj->save() === FALSE) {
+  #There was an error:
+ print "DB Error(".$myObj->errno."): ".$myObj->error."\n";
+}
+
+*** Delete
+
+Delete a record as follows:
+
+if ($myObj->delete()) {
+#blah
+} else {
+  print "Error: ".$myObj->db->error;
+}
+
+*** Aliases
+
+The following methods are available for those whose brains work differently:
+
+$myObj->read() == $myObj->load()
+$myObj->create() == $myObj->insert()
+$myObj->update() == $myObj->save();
+$myObj->delete() == $myObj->nuke();
+
+** Resetting the object
+
+You can clear all values in the object to NULL via:
+
+$myObj->reset();

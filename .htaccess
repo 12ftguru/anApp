@@ -1,0 +1,3 @@
+RewriteEngine on
+RewriteRule !js|styles|(\.(ico|gif|jpg|jpeg|png|css|js)$) index.php
+RewriteOptions MaxRedirects=100
