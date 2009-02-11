@@ -22,8 +22,6 @@ function alibInit()
     $debug->setEnabled(TRUE);
     $debug->level = ($debugLevel) ? $debugLevel : 0;
     include_once ('configHandler.inc');
-    # include_once('db.inc');
-    
   }
 /**
  * Add a path to the include path, independent of system
@@ -200,6 +198,7 @@ abstract class smartObject extends anObject {
   public $errno;
   public $insertID;
   protected $foreignKeys = array();
+  protected $serializedKeys = array();
   protected $format = array(
 			  'string' => '', // a sprintf style format string
 			  'vars' => array() // class variables;
@@ -230,6 +229,8 @@ abstract class smartObject extends anObject {
       {
 	if ($name == 'id' && $this->idField != 'id') {
 	  $this->{$this->idField} = $value;
+	} else if (in_array($name, $this->serializedKeys)) {
+	  $this->$name = serialize($value);
 	} else {
 	  $this->$name = $value;
 	}
@@ -241,8 +242,9 @@ abstract class smartObject extends anObject {
         global $debug;
 	if ($name == 'id' && $this->idField != 'id') {
 	  return $this->{$this->idField};
-	
-      } else if (!is_array($this->foreignKeys[$name])) {
+	} else if (in_array($name, $this->serializedKeys)) {
+	  return unserialize(parent::__get($name));
+	} else if (!is_array($this->foreignKeys[$name])) {
 	  return parent::__get($name);
 	} else {
 	  if (!is_a($this->foreignKeys[$name]['obj'], 'smartObject')) {
@@ -299,30 +301,31 @@ abstract class smartObject extends anObject {
     $this->lastResult = array();
   }
 
+
   public function read() {
     global $debug;
     $debug->debug('Reading...',1);
       $debug->debug($this,1);
-    if (is_a($this->db, 'idb')) {
-      $this->reset();
-      $sql = str_replace('-#id#-', $this->{$this->idField}, $this->readSQL);
-      $debug->debug('SmartObject Read SQL: '.$sql, 1);
-      $res = $this->db->query($sql);
-      if (is_object($res)) {
-        if ($res->num_rows == 1) {
-	  $this->lastResult = $res->fetch_assoc();
-	  foreach ($this->lastResult as $key => $val) {
-	    $this->{$key} = $val;
-	  }
-	  return TRUE;
+      if (is_a($this->db, 'idb')) {
+	$this->reset();
+	$sql = str_replace('-#id#-', $this->{$this->idField}, $this->readSQL);
+	$debug->debug('SmartObject Read SQL: '.$sql, 1);
+	$res = $this->db->query($sql);
+	if (is_object($res)) {
+	  if ($res->num_rows == 1) {
+	    $this->lastResult = $res->fetch_assoc();
+	    foreach ($this->lastResult as $key => $val) {
+	      $this->{$key} = $val;
+	    }
+	    return TRUE;
+	  } else {
+	    return FALSE;
+	  } 
 	} else {
-	  return FALSE;
-	} 
+	  return $db->error;
+	}
       } else {
-        return $db->error;
-      }
-    } else {
-      return FALSE;
+	return FALSE;
     }
   }
 
@@ -423,7 +426,53 @@ abstract class smartObject extends anObject {
 
 }
 
+/* You should never have to extend this. Use the factory below. */
+class smartResult extends MySQLi_Result {
+  public $resultType;
+  public $resultParams;
 
+  function fetch($type = NULL, $params = NULL) {
+    if (!$type) { $type = $this->resultType; }
+    if (!$params) { $params = $this->resultParams; }
+    if ($type) {
+    return $this->fetch_object($type, $params);
+    } else {
+      global $debug;
+      $debug->debug('sro fetch', 6);
+      $debug->debug($this,6);
+    }
+  }
+}
+
+
+/* Extend this with $objectType and $objectAdditionalParams */
+abstract class smartObjectFactory extends anObject {
+  public static $objectType;
+  public static $objectAdditionalParams;
+  private static $instance = NULL;
+
+  public function _query($query, $db = NULL) {
+    global $debug;
+    if (!$db) { $db = $GLOBALS['db']; };
+    if ($db->real_query($query)) {
+      $smartResult = new smartResult($db);
+      //because static var inheritance can be strange...
+      $vars = get_class_vars(get_class($this));
+      $smartResult->resultType = $vars['objectType'];
+      $smartResult->resultParams = $vars['objectAdditionalParams'];
+      $debug->debug('Returning sro '.$class, 6);
+      $debug->debug($smartResult, 6);
+      return $smartResult;
+    } else {
+      return FALSE;
+      // A real programmer would add exceptions here.
+    }
+  }
+
+  abstract public static function query ($query, $db = NULL);
+
+  
+}
 
 /* Now I do the alibInit because why wouldn't you? And why should I make
 you? */

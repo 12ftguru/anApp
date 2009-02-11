@@ -1,17 +1,19 @@
 <?php
-$debugLevel = 1;
+$debugLevel = 6;
 $configFile = 'common/config.inc';
-include_once("../alib/alib.inc");
+include_once("./alib/alib.inc");
 global $debug;
 
-
-addIncludePath('../alib');
+$debug->debug('Adding paths...', 10);
+addIncludePath('./alib');
 addIncludePath('./common');
 addIncludePath('./php', TRUE);
-include_once( './common/user.inc' );
+
+$debug->debug('Adding mandatory includes...', 10);
+include_once( './alib/iuser.inc' );
 include_once( './common/functions.inc' );
 
-
+$debug->debug('Creating login object.', 10);
 $login = new login();
 
 
@@ -22,12 +24,14 @@ $login = new login();
    If debug level is > 8 we turn error reporting all the way on as well.
 */
 //    error_reporting(0);
-error_reporting(E_ALL ^ (E_WARNING|E_NOTICE));
-if ( $debugLevel == 0 ) {
-    error_reporting(0);    
-} elseif ( $debugLevel > 8 ) {
-    error_reporting(E_ALL);
-}
+//error_reporting(E_ALL ^ (E_WARNING|E_NOTICE));
+
+
+/* if ( $debugLevel == 0 ) { */
+/*     error_reporting(0);     */
+/* } elseif ( $debugLevel > 8 ) { */
+/*     error_reporting(E_ALL); */
+/* } */
 
 //if ( $login->loggedIn ) {
     global $user, $broker;

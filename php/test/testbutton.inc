@@ -14,8 +14,31 @@ class testbutton extends aWidget
      * @return string
      */
     function __construct() {
-        global $debug, $db, $user;
-	$debug->level = 3;
+        global $debug, $db;
+	$html = "";
+
+	$user3 = new iuser();
+	$user3->gn = "John";
+	$user3->sn = "Clark";
+	$user3->loginName = "john";
+	$user3->email = "john@12ftguru.com";
+	$user3->access = 0;
+	$user3->status = 1;
+	$user3->passwd = "foo";
+	$user3->create();
+
+	$res = iuserFactory::query('select * from users');
+	$debug->debug('Res: ',2);
+	$debug->debug($res, 2);
+
+	while ($user = $res->fetch()) {
+	  $html .= htmlutf8entities($user) . "<br />";
+	}
+
+	$user2 = new iuser(1);
+
+
+
 	$retval = array('success' => TRUE);
 	$retval['update']['eastpanel'] = array(
 					       'border' => FALSE,
@@ -24,8 +47,8 @@ class testbutton extends aWidget
 				     );
 	$retval['create'][] = array(
 				    'xtype' => 'notification',
-				    'title' => 'System Notification',
-				    'html' => "This is a test. This is only a test.",
+				    'title' => 'Primary User: '.$user2,
+				    'html' => $html,
 				    'hidden' => FALSE,
 				    'id' => 'systemMessageWindow',
 				    'delay' => 5000,

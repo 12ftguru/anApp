@@ -62,7 +62,8 @@ class broker extends anObject
 
         $fileInfo = explode('/', rtrim($uri, '/'));
         $debug->debug('Checking url %s %s', $uri, $fileInfo, 3);
-            if ( $uri == $config->self ) {
+
+	    if ( $uri == $config->self ) {
                 if ( $debug->level == 0 && $user->access == ANAPPADMIN && !$config->deployed) {
                     $debug->level = 1;
                     $debug->line('anApp loaded, admin user detected, dev environment detected.',1);

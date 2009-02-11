@@ -33,7 +33,7 @@ class login extends anObject {
     $form->filter->password( FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_AMP );
     $form->filter->logout( FILTER_VALIDATE_BOOLEAN );
     $debug->debug('Form %s %s', $form->username, $form->password, 10);
-    $this->user = new user();
+    $this->user = new iuser();
     $badlogin = 0;
     $this->loggedIn = FALSE;
     if ($form->logout == 1  || !(stristr($_SERVER['REQUEST_URI'], "logout") === FALSE)) {
