@@ -47,8 +47,7 @@ class template extends anObject
         $this->file = $file;
         parent::__construct();
       }
-    public 
-    function __set($name, $value) 
+    public function __set($name, $value) 
       {
         $this->set($name, $value);
       }
@@ -59,8 +58,7 @@ class template extends anObject
      * @param mixed $value variable to pass into the template. If this
      * is another template object, it will be parsed immediately.
      */
-    public 
-    function set($name, $value) 
+    public function set($name, $value) 
       {
         global $debug;
         if (is_object($value) && is_a($value, "template")) 
@@ -84,8 +82,7 @@ class template extends anObject
      * @param mixed $value variable to pass into the template. If this
      * is another template object, it will be parsed immediately.
      */
-    public 
-    function push($name, $value) 
+    public function push($name, $value) 
       {
         global $debug;
         if (isset($this->vars[$name]) && !is_array($this->vars[$name])) 
@@ -115,8 +112,7 @@ class template extends anObject
      * file. Yes, you can change template files midstream.
      * @return string HTML
      */
-    public 
-    function parse($file = null) 
+    public function parse($file = null) 
       {
         global $debug;
         $debug->debug('Parsing from: %s', __CLASS__, 3);
@@ -146,15 +142,13 @@ class template extends anObject
      * @param string $file [optional] the name of the template
      * file. Yes, you can change template files midstream.
      */
-    public 
-    function display($file = null) 
+    public function display($file = null) 
       {
         $output = $this->parse($file);
         print $output;
       }
 
-    public 
-    function clear($file = null) 
+    public function clear($file = null) 
       {
           global $user, $debug, $self, $config;
           $this->vars = array();

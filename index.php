@@ -1,11 +1,9 @@
 <?php
-$debugLevel = 4;
+$debugLevel = 1;
 $configFile = 'common/config.inc';
 include_once("../alib/alib.inc");
 global $debug;
 
-#$debug->level = 3;
-#$debug->setEnabled(FALSE);
 
 addIncludePath('../alib');
 addIncludePath('./common');
@@ -23,7 +21,7 @@ $login = new login();
    in production and don't want people seeing how we made the sausage.
    If debug level is > 8 we turn error reporting all the way on as well.
 */
-#    error_reporting(0);
+//    error_reporting(0);
 error_reporting(E_ALL ^ (E_WARNING|E_NOTICE));
 if ( $debugLevel == 0 ) {
     error_reporting(0);    
@@ -31,7 +29,7 @@ if ( $debugLevel == 0 ) {
     error_reporting(E_ALL);
 }
 
-#if ( $login->loggedIn ) {
+//if ( $login->loggedIn ) {
     global $user, $broker;
     $user = $login->user;
     $debug->debug('User logged in: %s', $user, 3);
