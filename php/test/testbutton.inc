@@ -48,11 +48,10 @@ class testbutton extends aWidget
 	$retval['create'][] = array(
 				    'xtype' => 'notification',
 				    'title' => 'Primary User: '.$user2,
-				    'html' => $html,
-				    'hidden' => FALSE,
+				    'msg' => $html,
 				    'id' => 'systemMessageWindow',
-				    'delay' => 5000,
-				    'autoShow' => TRUE
+				    'autoShow' => TRUE,
+				    'buttons' => 'action:Ext.Msg.OK',
 				    );
 	$this->json($retval);
 

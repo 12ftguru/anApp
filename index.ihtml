@@ -15,8 +15,6 @@
     <link rel="stylesheet" type="text/css" href="<?=$config->self;?>styles/astyle.css"  />
     <script type="text/javascript" src="<?=$config->extLocation;?>/adapter/ext/ext-base.js"></script>
     <script type="text/javascript" src="<?=$config->extLocation;?>/ext-all.js"></script>
-  <script type="text/javascript" src="js/anApp.Overrides.js"></script>
-  <script type="text/javascript" src="js/anApp.js"></script>
 </head>
 <body id="anAppMain">
 <div id="load-thingy">
@@ -26,6 +24,8 @@
   </div>
 </div>
 <div id="hideme"  class="x-layout-inactive-content" ></div>
+  <script type="text/javascript" src="js/anApp.Overrides.js"></script>
+  <script type="text/javascript" src="js/anApp.js"></script>
   <script type="text/javascript">
 // reference local blank image
 Ext.BLANK_IMAGE_URL = '<?=$extLocation;?>/resources/images/default/s.gif';

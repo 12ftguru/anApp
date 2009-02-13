@@ -86,7 +86,7 @@ class testbutton2 extends aWidget
 	$retval['create'][] = array(
 				    'xtype' => 'error',
 				    'title' => 'Unknown Error',
-				    'html' => "There has been an unexpected error. Since it's unexpected, we aren't really sure what to tell you. Maybe you ought to call someone.<br />".$testItem1,
+				    'msg' => "There has been an unexpected error. Since it's unexpected, we aren't really sure what to tell you. Maybe you ought to call someone.<br />".$testItem1,
 				    'hidden' => FALSE,
 				    'id' => 'errorWindow',
 				    'autoShow' => TRUE

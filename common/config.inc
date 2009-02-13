@@ -31,4 +31,7 @@ $styles = array();
 /* What's our root directory? */
 $self = '/anapp/';
 
+/* Class called if the requested widget class can't be found. Useful for 404s, static html pages, etc. */
+$defaultWidget = '';
+
 ?>

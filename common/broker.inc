@@ -31,19 +31,20 @@ if ( $login->loggedIn ) {
     set_exception_handler( 'brokerExceptionHandler' );
 }
 
+class BrokerException extends Exception { }
+class BrokerMissingWidgetException extends BrokerException { }
 
 /**
   * Broker decides, based on our url, what file to display. Existing
-  *  images and html files are automatically included, .ijs files are
-  *  parsed with user prefs and globals ($self, $user, $db, $config,
-  *  etc.) and widgets are simply included. It's then up to the widgets
-  *  to decide what they display.
+  *  images and html files are automatically included, and widgets are
+  *  simply included. It's then up to the widgets to decide what they
+  *  display.
   *
   * @package anApp
   */
 class broker extends anObject
 {
-    private $forbiddenExtensionsRegex = "/\.(inc|php|phps|php5|ihtml|js|ijs|icss)$/";
+    private $forbiddenExtensionsRegex = "/\.(inc|php|phps|php5|ihtml|js)$/";
 
 
    /**
@@ -125,10 +126,20 @@ class broker extends anObject
             $debug->debug('Checking fileInfo: %s', $uri, 3);
             
         if ( preg_match('/\/[A-Za-z0-9]+(\/)*$/', $uri ) && !preg_match('/permalink\/[A-Za-z]+\/[0-9]+(\/)*$/', $uri)) {
+	  try {
             $debug->debug('Including %s',$fileInfo[count($fileInfo)-1],3); 
             $widget = new $fileInfo[count($fileInfo)-1];
             $widget->display();
-            exit;            
+            exit;
+	  } catch (Exception $e) {
+	    if ($config->defaultWidget != '') {
+	      $widget = new $config->defaultWidget;
+	      $widget->display();
+	      exit;
+	    } else {
+	      throw new BrokerMissingWidgetException($e);
+	    }
+	  }
         }
 
         /* If we've gotten this far, and we're logged in, just return

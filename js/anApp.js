@@ -4,7 +4,7 @@ Ext.namespace('anApp');
 Ext.namespace('Ext.ux'); //Get that out of the way.
 
 /**
- * 
+ *
  * @class anApp
  * @extends Ext.util.Observable
  *
@@ -36,7 +36,7 @@ anApp = function(){
 	    Ext.ComponentMgr.remoteLoadBaseURL = this.moduleURLPrefix;
 	}
 	Ext.ComponentMgr.monitorAjax();
-	
+
 	if (this.appLayout) {
 	    this.on('loaded', function() {
 		var req = 		{
@@ -51,12 +51,12 @@ anApp = function(){
 	    }, this, { single: true });
 	}
 	if (this.loadDependencies) {
-	    this.preloadModules.unshift('dependencies');
+	  this.autoLoadRemote('dependencies', false);
 	}
 	if (this.preloadModules.length > 0) {
 	for (var i = 0; i < this.preloadModules.length; i++) {
 	    this.autoLoadRemote(this.preloadModules[i], true);
-	}	   
+	}
 	} else {
 	    this.fireEvent('loaded');
 	}
