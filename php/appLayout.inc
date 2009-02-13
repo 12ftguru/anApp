@@ -26,7 +26,7 @@ class appLayout extends aWidget
 							    ),
 						      array(
 							    'region' => 'north',
-							    'html' => 'anApp 2.0',
+							    'html' => 'anApp 3.0 test app',
 							    'collapsible' => TRUE
 							    ),
 						      array(
