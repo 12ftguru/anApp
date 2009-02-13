@@ -1,0 +1,451 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+lang="en" xml:lang="en">
+<head>
+<title>anApp 3</title>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2009-02-06 12:11:53 "/>
+<meta name="author" content="Bryan P Johnson"/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color:lightblue; font-weight:normal }
+  .target { }
+  .timestamp { color: grey }
+  .timestamp-kwd { color: CadetBlue }
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style><link rel="stylesheet" type="text/css" href="/org-style.css" />
+<script type="text/javascript" src="/org-info.js"></script>
+<script type="text/javascript" >
+<!--/*--><![CDATA[/*><!--*/
+org_html_manager.set("TOC_DEPTH", "3");
+org_html_manager.set("LINK_HOME", "http://debuggery.net/");
+org_html_manager.set("LINK_UP", "");
+org_html_manager.set("LOCAL_TOC", "1");
+org_html_manager.set("VIEW_BUTTONS", "0");
+org_html_manager.set("MOUSE_HINT", "underline");
+org_html_manager.set("FIXED_TOC", "0");
+org_html_manager.set("TOC", "1");
+org_html_manager.set("VIEW", "info");
+org_html_manager.setup();  // activate after the parameters are set
+/*]]>*/-->
+</script>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*/-->
+</script>
+</head><body>
+<h1 class="title">anApp 3</h1>
+
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">What is anApp? </a></li>
+<li><a href="#sec-2">Installing </a></li>
+<li><a href="#sec-3">Creating an anApp application </a></li>
+<li><a href="#sec-4">What makes anApp different? </a>
+<ul>
+<li><a href="#sec-4.1">Get out of the developer's way </a></li>
+<li><a href="#sec-4.2">Allow the developer to do as little work as possible </a></li>
+<li><a href="#sec-4.3">One thing does one thing only </a></li>
+</ul>
+</li>
+<li><a href="#sec-5">Why 3.0? What happened to versions 1 and 2? </a>
+<ul>
+<li><a href="#sec-5.1">Roadmap to 3.0 [0%] </a></li>
+<li><a href="#sec-5.2">After 3.0, we need to do the following posthaste [0/6] </a></li>
+</ul>
+</li>
+<li><a href="#sec-6">Rules of the Road, an anApp Style Guide </a>
+<ul>
+<li><a href="#sec-6.1">Naming Conventions </a>
+<ul>
+<li><a href="#sec-6.1.1">Database </a></li>
+<li><a href="#sec-6.1.2">PHP </a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">What is anApp? </h2>
+<div id="text-1">
+
+<p>anApp is an Application Framework for PHP and Javascript that focuses on providing utility while trying to stay out of the programmer's way as much as possible.
+</p>
+<p>
+anApp is comprised of four parts:
+</p>
+<ul>
+<li>
+<a href="alib.html">aLib</a> &ndash; the core low-level php libraries, which may be used separately from the other parts of anApp
+</li>
+<li>
+<a href="anAppPHP.html">anApp PHP Backend</a> &ndash; the PHP backend framework, depends on aLib, but may be used independently from anApp JS
+</li>
+<li>
+<a href="anAppJS.html">anApp JS</a> &ndash; the Javascript ui framework, may be used independently from anApp PHP but requires the <a href="http://www.extjs.com/">Ext JS javascript library</a>.
+</li>
+<li>
+<a href="funcMod.html">anApp-based functionality modules</a> &ndash; Reusable bits of code that actually form the functionality of the application. These are written by you, by us and by the community but are not part of the actual anApp distribution.
+
+</li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">Installing </h2>
+<div id="text-2">
+
+
+<p>
+coming soon
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3">Creating an anApp application </h2>
+<div id="text-3">
+
+
+<p>
+coming soon
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4">What makes anApp different? </h2>
+<div id="text-4">
+
+
+<p>
+anApp was created with several underlying philosophies:
+</p>
+
+</div>
+
+<div id="outline-container-4.1" class="outline-3">
+<h3 id="sec-4.1">Get out of the developer's way </h3>
+<div id="text-4.1">
+
+
+<p>
+In these docs, and in the comments in the code, you'll find phrases
+like "if you want to use this" or "you don't have to use this, but&hellip;"
+I know when I'm coding, I'm fairly particular about how I like to do
+things. I want the required parts of anApp to be as few in number as
+possible. No one should have to use any component they don't want
+to. Don't want to use the iform object? Don't! I could care less.
+</p>
+<p>
+Thus every bit of anApp, with a very few exceptions, should be
+discrete and optional. The various modules you build your application
+out of may have requirements and dependencies, but that's a different
+story. And they should be fairly pluggable.
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-4.2" class="outline-3">
+<h3 id="sec-4.2">Allow the developer to do as little work as possible </h3>
+<div id="text-4.2">
+
+
+<p>
+Ideally, creating a new anApp-based application will involve copying
+the basic framework files to a new directory, choosing modules from
+the library, copying those files into your new application directory
+and tweaking them. I know that it will rarely work out that way, but
+writing one or two new modules per application is better than starting
+from scratch.
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-4.3" class="outline-3">
+<h3 id="sec-4.3">One thing does one thing only </h3>
+<div id="text-4.3">
+
+
+<p>
+If a file is called "saveNote.inc" that file really should just save
+notes (and reply with the success/failure of said save). It shouldn't
+be used to save or display anything else. Sure, this makes for lots of
+little files lying around, but if you want to know what
+<a href="http://myApp/saveNote">http://myApp/saveNote</a> does, you've got a pretty good idea of where to
+find out.
+</p>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-5" class="outline-2">
+<h2 id="sec-5">Why 3.0? What happened to versions 1 and 2? </h2>
+<div id="text-5">
+
+<p>Version 1.0 of anApp was our original, in-house version. It is running
+on sites like <a href="http://www.12ftguru.com/">http://www.12ftguru.com/</a> and
+<a href="http://www.thoughtholder.com/">http://www.thoughtholder.com/</a> and <a href="http://www.bandmetrics.com/">http://www.bandmetrics.com/</a> That
+version was using version 2.1 of aLib. Since aLib is going to version
+3 in this release, I thought it would be confusing to put anApp at
+version 2. So everything is version 3, which means we get to bypass
+the terrible twos.
+</p>
+<p>
+The initial commit to Google Code is our 3.0 pre-release. The
+following are left to be completed to meet our 3.0 milestone:
+</p>
+
+</div>
+
+<div id="outline-container-5.1" class="outline-3">
+<h3 id="sec-5.1">Roadmap to 3.0 [0%] </h3>
+<div id="text-5.1">
+
+<ul>
+<li>
+<b>[<span style="visibility:hidden;">X</span>]</b> completion of improved user object (iuser.inc)
+</li>
+<li>
+<b>[<span style="visibility:hidden;">X</span>]</b> remove filtering from iform and put in own object.
+</li>
+<li>
+<b>[<span style="visibility:hidden;">X</span>]</b> creation of new login architecture and initial plugins [0/4]
+<ul>
+<li>
+<b>[<span style="visibility:hidden;">X</span>]</b> architecture finalized
+</li>
+<li>
+<b>[<span style="visibility:hidden;">X</span>]</b> db based cookie auth
+</li>
+<li>
+<b>[<span style="visibility:hidden;">X</span>]</b> openID
+</li>
+<li>
+<b>[<span style="visibility:hidden;">X</span>]</b> yahoo auth
+</li>
+</ul>
+</li>
+<li>
+<b>[<span style="visibility:hidden;">X</span>]</b> Fix $config-&gt;extPath to take into account new ext cdn stuff.
+</li>
+<li>
+<b>[<span style="visibility:hidden;">X</span>]</b> separate example app specific stuff from the main distro
+</li>
+<li>
+<b>[<span style="visibility:hidden;">X</span>]</b> Create actual sample apps
+</li>
+<li>
+<b>[<span style="visibility:hidden;">X</span>]</b> documentation must be progressing&hellip;
+
+</li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-5.2" class="outline-3">
+<h3 id="sec-5.2">After 3.0, we need to do the following posthaste [0/6] </h3>
+<div id="text-5.2">
+
+<ul>
+<li>
+<b>[<span style="visibility:hidden;">X</span>]</b> make sure anApp3 is compatible with Ext3 (due out in late March)
+</li>
+<li>
+<b>[<span style="visibility:hidden;">X</span>]</b> Create module library
+</li>
+<li>
+<b>[<span style="visibility:hidden;">X</span>]</b> Examine Phing
+</li>
+<li>
+<b>[<span style="visibility:hidden;">X</span>]</b> phpUnit
+
+
+</li>
+</ul>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-6" class="outline-2">
+<h2 id="sec-6">Rules of the Road, an anApp Style Guide </h2>
+<div id="text-6">
+
+
+</div>
+
+<div id="outline-container-6.1" class="outline-3">
+<h3 id="sec-6.1">Naming Conventions </h3>
+<div id="text-6.1">
+
+
+<p>
+I prefer camelCase over under_scores, although there's little
+rationale behind it. I just like camelCase better. Any object that
+extends anObject (including all of the aLib objects) will
+automatically convert between the two for methods:
+</p>
+
+
+
+<pre class="src src-php">
+<span class="linenr"> 1:  </span>
+<span class="linenr"> 2:  </span><span class="org-keyword">class</span> <span class="org-type">swissArmyKnife</span> <span class="org-keyword">extends</span> <span class="org-type">anObject</span> {
+<span class="linenr"> 3:  </span>
+<span class="linenr"> 4:  </span>   <span class="org-keyword">public</span> <span class="org-keyword">function</span> <span class="org-function-name">bottleOpener</span>() {
+<span class="linenr"> 5:  </span>      <span class="org-keyword">print</span> <span class="org-string">"Works"</span>;
+<span class="linenr"> 6:  </span>   }
+<span class="linenr"> 7:  </span>
+<span class="linenr"> 8:  </span>   <span class="org-keyword">public</span> <span class="org-keyword">function</span> <span class="org-function-name">tooth_pick</span>() {
+<span class="linenr"> 9:  </span>      <span class="org-keyword">print</span> <span class="org-string">"I lost it again."</span>;
+<span class="linenr">10:  </span>   }
+<span class="linenr">11:  </span>
+<span class="linenr">12:  </span>}
+<span class="linenr">13:  </span>
+<span class="linenr">14:  </span>$<span class="org-variable-name">myObj</span> = <span class="org-keyword">new</span> <span class="org-type">swissArmyKnife</span>();
+<span class="linenr">15:  </span>
+<span class="linenr">16:  </span>$<span class="org-variable-name">myObj</span>-&gt;<span class="org-default">bottleOpener</span>(); <span class="org-comment-delimiter">//</span><span class="org-comment">Works
+<span class="linenr">17:  </span></span>$<span class="org-variable-name">myObj</span>-&gt;<span class="org-default">bottle_opener</span>(); <span class="org-comment-delimiter">//</span><span class="org-comment">Works
+<span class="linenr">18:  </span></span>
+</pre>
+
+
+
+
+<p>
+I should probably do the same for class attributes. 
+</p>
+<p>
+So the point is kind of moot, but I find that reading code is easier
+if everything looks the same. So&hellip; naming conventions I follow:
+</p>
+
+</div>
+
+<div id="outline-container-6.1.1" class="outline-4">
+<h4 id="sec-6.1.1">Database </h4>
+<div id="text-6.1.1">
+
+<ul>
+<li id="sec-6.1.1.1">No underscores <br/>
+</li>
+<li id="sec-6.1.1.2">unique autoincrement ids are named &lt;singular tablename&gt;ID such that a table called "things" would have a unique ID thingID <br/>
+The thinking is that a row of a table is a singluar instance, so a table containing things would have rows that each represent one thing.
+</li>
+<li id="sec-6.1.1.3">table names are plural, lower case, alphanumeric characters only <br/>
+Good: mythings
+Bad: myThings
+Bad: my<sub>things</sub>
+Bad: mything
+Bad: somethinghavingnothingtodowithmything
+
+<p>
+Note, the corresponding ID would be myThingID
+</p><ul>
+<li id="sec-6.1.1.3.1">Raw data tables should have the word "raw" as the first part of the table name. <br/>
+</li>
+</ul>
+</li>
+<li id="sec-6.1.1.4">Column names are alphanumeric mixed case, with words camelcased <br/>
+</li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-6.1.2" class="outline-4">
+<h4 id="sec-6.1.2">PHP </h4>
+<div id="text-6.1.2">
+
+<ul>
+<li id="sec-6.1.2.1">Classes <br/>
+<ul>
+<li id="sec-6.1.2.1.1">One class per file <br/>
+<ul>
+<li id="sec-6.1.2.1.1.1">Filename is classname.inc <br/>
+</li>
+<li id="sec-6.1.2.1.1.2">If the file has an accompanying html template: <br/>
+<ul>
+<li id="sec-6.1.2.1.1.2.1">Single templates should be called classname.ihtml <br/>
+</li>
+<li id="sec-6.1.2.1.1.2.2">Multiple template files should be named classname-&lt;some descriptor&gt;.ihtml <br/>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li id="sec-6.1.2.2">Class, function and variable names are camelcased, alphanumeric characters only <br/>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble"><p class="author"> Author: Bryan P Johnson
+<a href="mailto:bryan@12ftguru.com">&lt;bryan@12ftguru.com&gt;</a>
+</p>
+<p class="date"> Date: 2009-02-06 12:11:53 </p>
+</div></body>
+</html>
