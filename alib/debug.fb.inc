@@ -1,11 +1,14 @@
 <?php
 /**
- * The Debug Object and then some.
+ * The Debug Object, FirePHP compatible.
+ * 
+ * You must place FirePHP.class.php in your include path for this to
+ * work.
  *
  * There is only ever one debug object. You will never create
  * it. When you first include alib.inc, the debug object is created
  * and placed both in $AGLOBAL['DEBUG'] and the global variable
- * $debug.
+ * $debug. 
  *
  * Note that the {@link $AGLOBAL} variable stores a reference to the
  * debug object in $MGLOBAL['DEBUG']

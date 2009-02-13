@@ -16,8 +16,12 @@
 function alibInit() 
   {
     addIncludePath('.');
-    include_once ('debug.inc');
-    global $debug, $debugLevel;
+    global $debug, $debugLevel, $debugStyle;
+    if ($debugStyle == 'firebug') {
+      include_once ('debug.fb.inc');
+    } else {
+      include_once ('debug.inc');
+    }
     $debug = Debug::singleton();
     $debug->setEnabled(TRUE);
     $debug->level = ($debugLevel) ? $debugLevel : 0;

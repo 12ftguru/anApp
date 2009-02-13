@@ -1,5 +1,6 @@
 <?php
 $debugLevel = 6;
+$debugStyle = 'firebug';
 $configFile = 'common/config.inc';
 include_once("./alib/alib.inc");
 global $debug;
