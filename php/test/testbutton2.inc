@@ -57,15 +57,17 @@ class testSmart2 extends smartObject
 class testbutton2 extends aWidget
 {
 
+  public $attemptedWidget = 'testbutton2';
+
    /**
      * our constructor
      *
      * @return string
      */
-    function __construct() {
+    function __construct($newName) {
         global $debug, $db, $user;
 	$debug->level = 3;
-
+	$this->attemptedWidget = ($newName)?$newName:$this->attemptedWidget;
 	$testItem1 = new testSmart1(1);
 
         $testItem1->title = 'Test me!';
@@ -80,12 +82,12 @@ class testbutton2 extends aWidget
 	    $debug->debug($testItem1->stream->title, 1);
 
 	    
-
+	    $debug->debug($this, 1);
 
 	$retval = array('success' => TRUE);
 	$retval['create'][] = array(
 				    'xtype' => 'error',
-				    'title' => 'Unknown Error',
+				    'title' => 'Unknown Error: '.$this->attemptedWidget,
 				    'msg' => "There has been an unexpected error. Since it's unexpected, we aren't really sure what to tell you. Maybe you ought to call someone.<br />".$testItem1,
 				    'hidden' => FALSE,
 				    'id' => 'errorWindow',

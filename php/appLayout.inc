@@ -36,7 +36,7 @@ class appLayout extends aWidget
 							    'id' => 'eastpanel',
 							    'collapsible' => TRUE,
 							    'width' => 300,
-							    'tbar' => array('action:anApp.testButton1', 'action:anApp.testButton2')
+							    'tbar' => array('action:anApp.testButton1', 'action:anApp.testButton2', 'action:anApp.testButton3')
 
 							    )
 						      )

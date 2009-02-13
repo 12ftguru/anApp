@@ -15,3 +15,12 @@ anApp.testButton2 = new Ext.Action(
 	}
     }
 );
+
+anApp.testButton3 = new Ext.Action(
+    {
+	text: 'Default Widget Test',
+	handler: function(){
+	    Ext.Ajax.request({url: 'testbutton3'});
+	}
+    }
+);

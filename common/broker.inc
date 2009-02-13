@@ -54,7 +54,7 @@ class broker extends anObject
      */
     function __construct() {
         /* First see if our file exists and isn't in the excluded array. */
-            global $user, $config, $debug, $db, $login;
+      global $user, $config, $debug, $db, $login;
             if ( ! is_object($db) ) {
                 $db = new idb($config->mainDB);                
             }
@@ -126,21 +126,24 @@ class broker extends anObject
             $debug->debug('Checking fileInfo: %s', $uri, 3);
             
         if ( preg_match('/\/[A-Za-z0-9]+(\/)*$/', $uri ) && !preg_match('/permalink\/[A-Za-z]+\/[0-9]+(\/)*$/', $uri)) {
-	  try {
-            $debug->debug('Including %s',$fileInfo[count($fileInfo)-1],3); 
-            $widget = new $fileInfo[count($fileInfo)-1];
+	  if ($config->defaultWidget != '') {
+	    $oldEH = set_error_handler('defaultWidget');
+	    $oldLev = error_reporting(0);
+	    global $widgetName;
+	    $widgetName = $fileInfo[count($fileInfo)-1];
+	    $debug->debug('Including %s',$widgetName,3); 
+            $widget = new $widgetName;
+	    restore_error_handler();
+	    error_reporting($oldLev);
             $widget->display();
             exit;
-	  } catch (Exception $e) {
-	    if ($config->defaultWidget != '') {
-	      $widget = new $config->defaultWidget;
-	      $widget->display();
-	      exit;
-	    } else {
-	      throw new BrokerMissingWidgetException($e);
-	    }
+	  } else {
+	    $debug->debug('Including %s',$fileInfo[count($fileInfo)-1],3); 
+            $widget = new $fileInfo[count($fileInfo)-1];
+            $widget->display();
+	    exit;
 	  }
-        }
+	}
 
         /* If we've gotten this far, and we're logged in, just return
          the index page. */
@@ -161,5 +164,14 @@ class broker extends anObject
     
 };
 
+function defaultWidget($n, $s, $f, $l, $c) {
+  if ($n > E_WARNING) {
+    return;
+  }
+  global $config, $debug, $widgetName;
+  $widget = new $config->defaultWidget($widgetName);
+  $widget->display();
+  exit;
+}
 
 ?>

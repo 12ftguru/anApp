@@ -89,10 +89,12 @@ function addIncludePath($directory, $recurse = FALSE)
 
 function __autoload($class_name) 
   {
+    if (preg_match('/^[A-Za-z0-9\.\-\_]+$/', $class_name)) {
     if (!include_once (strtolower($class_name) . ".inc")) 
       {
         include_once ($class_name . ".inc");
       }
+    }
   }
 /** 
  * The aLib abstract standard object.
@@ -125,9 +127,9 @@ abstract class anObject
 	  $v = get_class_vars($this);
 	  $underscores = strtolower(preg_replace('/([A-Z]{1,1}[A-Za-z]+)/', '_$1', $name));
 	  $camelcase = strtolower(preg_replace('/_/', '', $name));
-	  if (in_array($underscores, $v)) {
+	  if (is_array($v) && in_array($underscores, $v)) {
 	    return $this->$underscores;
-	  } else if (in_array($camelcase, $v)) {
+	  } else if (is_array($v) && in_array($camelcase, $v)) {
 	    return $this->$camelcase;
 	  } else {
 	    return NULL;
