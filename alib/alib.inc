@@ -115,7 +115,20 @@ abstract class anObject
             $debug->line("Object (" . get_class($this) . ") __get $name = ", 10);
             $debug->variable($this->$name, 10);
           }
+	if ($this->$name) {
         return $this->$name;
+	} else {
+	  $v = get_class_vars($this);
+	  $underscores = strtolower(preg_replace('/([A-Z]{1,1}[A-Za-z]+)/', '_$1', $name));
+	  $camelcase = strtolower(preg_replace('/_/', '', $name));
+	  if (in_array($underscores, $v)) {
+	    return $this->$underscores;
+	  } else if (in_array($camelcase, $v)) {
+	    return $this->$camelcase;
+	  } else {
+	    return NULL;
+	  }
+	}
       }
     /**
      * This catches any calls to undefined functions.
