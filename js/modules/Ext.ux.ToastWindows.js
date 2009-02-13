@@ -1,5 +1,9 @@
+/* From a post by efattal http://extjs.com/forum/showthread.php?t=32365
+ * Must remove before release.
+ *  */
+
 Ext.ux.ToastWindowMgr = {
-    positions: [] 
+    positions: []
 };
 
 Ext.ux.ToastWindow = Ext.extend(Ext.Window, {
@@ -52,7 +56,7 @@ Ext.ux.ToastWindow = Ext.extend(Ext.Window, {
             duration: 1,
             callback: this.afterShow,
             scope: this
-        });    
+        });
     },
     animHide: function(){
            Ext.ux.ToastWindowMgr.positions.remove(this.pos);
@@ -61,6 +65,6 @@ Ext.ux.ToastWindow = Ext.extend(Ext.Window, {
             remove: true,
         scope: this,
         callback: this.destroy
-        });    
+        });
     }
-}); 
+});
