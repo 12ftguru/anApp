@@ -8,8 +8,8 @@ class cookieLogin extends loginPrototype {
     global $user, $debug, $config;
     // Set us up some vars: 
     $loginSafety = ($config->loginSafetyLevel)?$config->loginSafetyLevel:2; //iform level
-    $cookieUser = ($config->cookieUserKey)?$config->cookieUser:$config->appName.'User';
-    $cookieToken = ($config->cookieTokenKey)?$config->cookieToken:$config->appName.'Token';
+    $cookieUser = ($config->cookieUserKey)?$config->cookieUserKey:$config->appName.'User';
+    $cookieToken = ($config->cookieTokenKey)?$config->cookieTokenKey:$config->appName.'Token';
     
 
     $form = new iForm($loginSafety); //Strict Form
@@ -51,8 +51,8 @@ class cookieLogin extends loginPrototype {
   public function FormAuth($form) {
     global $config, $user, $debug;
     $cookieExpiry = ($config->loginExpires)?$config->loginExpires:(8*60*60); //default 8 hours from now.
-    $cookieUser = ($config->cookieUserKey)?$config->cookieUser:$config->appName.'User';
-    $cookieToken = ($config->cookieTokenKey)?$config->cookieToken:$config->appName.'Token';
+    $cookieUser = ($config->cookieUserKey)?$config->cookieUserKey:$config->appName.'User';
+    $cookieToken = ($config->cookieTokenKey)?$config->cookieTokenKey:$config->appName.'Token';
     $cookiePath = ($config->cookiePath)?$config->cookiePath:"";
     $cookieDomain = ($config->cookieDomain)?$config->cookieDomain:"";
     $cookieSecure = ($config->cookieSecure)?$config->cookieSecure:FALSE;
@@ -85,8 +85,8 @@ class cookieLogin extends loginPrototype {
   public function CookieAuth($form) {
     global $config, $user, $debug;
     $cookieExpiry = ($config->loginExpires)?$config->loginExpires:(8*60*60); //default 8 hours from now.
-    $cookieUser = ($config->cookieUserKey)?$config->cookieUser:$config->appName.'User';
-    $cookieToken = ($config->cookieTokenKey)?$config->cookieToken:$config->appName.'Token';
+    $cookieUser = ($config->cookieUserKey)?$config->cookieUserKey:$config->appName.'User';
+    $cookieToken = ($config->cookieTokenKey)?$config->cookieTokenKey:$config->appName.'Token';
     $cookiePath = ($config->cookiePath)?$config->cookiePath:"";
     $cookieDomain = ($config->cookieDomain)?$config->cookieDomain:"";
     $cookieSecure = ($config->cookieSecure)?$config->cookieSecure:FALSE;
@@ -110,8 +110,8 @@ class cookieLogin extends loginPrototype {
 
   public function CookieLogout($cookieUser, $cookieToken) {
     global $config;
-    $cookieUser = ($config->cookieUserKey)?$config->cookieUser:$config->appName.'User';
-    $cookieToken = ($config->cookieTokenKey)?$config->cookieToken:$config->appName.'Token';
+    $cookieUser = ($config->cookieUserKey)?$config->cookieUserKey:$config->appName.'User';
+    $cookieToken = ($config->cookieTokenKey)?$config->cookieTokenKey:$config->appName.'Token';
     $cookiePath = ($config->cookiePath)?$config->cookiePath:"";
     $cookieDomain = ($config->cookieDomain)?$config->cookieDomain:"";
     $cookieSecure = ($config->cookieSecure)?$config->cookieSecure:FALSE;
