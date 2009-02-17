@@ -43,7 +43,6 @@ class appLayout extends aWidget
 				     );
 	$this->json($retval);
 
-
     }
 
 

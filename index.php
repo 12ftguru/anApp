@@ -3,7 +3,7 @@ $debugLevel = 6;
 $debugStyle = 'firebug';
 $configFile = 'common/config.inc';
 include_once("./alib/alib.inc");
-global $debug;
+global $debug, $config;
 
 $debug->debug('Adding paths...', 10);
 addIncludePath('./alib');
@@ -13,45 +13,37 @@ addIncludePath('./php', TRUE);
 $debug->debug('Adding mandatory includes...', 10);
 include_once( './alib/iuser.inc' );
 include_once( './common/functions.inc' );
+include_once( './common/login.inc' );
 
-$debug->debug('Creating login object.', 10);
-$login = new login();
+// Connect to the db:
+if ( ! is_object($db) ) {
+  $db = new idb($config->mainDB);                
+}
 
-
-
-/*
-   Here we turn off error reporting if debugging is 0 (we assume we're
-   in production and don't want people seeing how we made the sausage.
-   If debug level is > 8 we turn error reporting all the way on as well.
-*/
-//    error_reporting(0);
-//error_reporting(E_ALL ^ (E_WARNING|E_NOTICE));
+$debug->debug('Creating login object '.$config->loginModule, 10);
+$login = new $config->loginModule;
 
 
-/* if ( $debugLevel == 0 ) { */
-/*     error_reporting(0);     */
-/* } elseif ( $debugLevel > 8 ) { */
-/*     error_reporting(E_ALL); */
-/* } */
 
-//if ( $login->loggedIn ) {
+
+if ( $login->loggedIn ) {
     global $user, $broker;
-    $user = $login->user;
-    $debug->debug('User logged in: %s', $user, 3);
+    $debug->debug('User logged in: %s', $user->loginName, 3);
     $broker = new broker(); 
     
 
     
-/*} else {
+} else {
     $debug->debug('No user logged in: %s', $login, 3);
     $template = new template($config->loginTemplate);
     $template->set('title', $config->defaultTitle);
     $template->set('appName', $config->appName);
     $template->set('extLocation', $config->extLocation);
     $template->set('self', $config->self);
-    if ( $login->error == BADLOGIN ) {
+    if ( $login->error ) {
         $template->set('badLogin', TRUE);
+	$template->set('loginError', $login->error);
     }
     $template->display();
-    }*/
+}
 ?>

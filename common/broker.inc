@@ -55,9 +55,6 @@ class broker extends anObject
     function __construct() {
         /* First see if our file exists and isn't in the excluded array. */
       global $user, $config, $debug, $db, $login;
-            if ( ! is_object($db) ) {
-                $db = new idb($config->mainDB);                
-            }
             
         list($uri, $cruft) = explode('?', $_SERVER['REQUEST_URI']);
 

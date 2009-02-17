@@ -29,10 +29,6 @@ abstract class aWidget {
      */
      function json($output) {
          global $debug, $user;
-         if ( $debug->level > 0 && $user->access == ANAPPADMIN) {
-             $output['updateItems'][] = array('id' => 'debugGrid',
-                                              'debugRecords' => $debug->dump_anAppJSON());
-         }
          $debug->level = 0;
          $output = $this->recursiveUnHtmlize($output);
          $output = json_encode($output);
