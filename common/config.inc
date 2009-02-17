@@ -25,6 +25,9 @@ $appURL = 'http://127.0.0.1'.$self;
 $loginTemplate = "login.ihtml";
 $loggedInTemplate = "index.ihtml";
 
+/* Allow broker to handle requests for non-logged in people: */
+$allowNonLoggedIn = TRUE; // Note, if you set this to true, your components must be cognizant of loggedin or not.
+
 /* Required Variables used by cookieLogin: */ 
 
 /* Use cookieLogin */

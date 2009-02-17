@@ -26,13 +26,10 @@ $login = new $config->loginModule;
 
 
 
-if ( $login->loggedIn ) {
+if ( $login->loggedIn || $config->allowNonLoggedIn ) {
     global $user, $broker;
     $debug->debug('User logged in: %s', $user->loginName, 3);
     $broker = new broker(); 
-    
-
-    
 } else {
     $debug->debug('No user logged in: %s', $login, 3);
     $template = new template($config->loginTemplate);
