@@ -246,6 +246,7 @@ abstract class smartObject extends anObject {
 
     public function __set($name, $value) 
       {
+	global $debug;
 	if ($name == 'id' && $this->idField != 'id') {
 	  $this->{$this->idField} = $value;
 	} else if (in_array($name, $this->serializedKeys)) {
@@ -355,7 +356,11 @@ abstract class smartObject extends anObject {
       if (is_a(self::$statementCache[$myClass]['insert'], 'mysqli_stmt')) {
 	$insertVals = array($this->insertSQL['types']);
 	foreach ($this->insertSQL['vars'] as $var) {
+	  if (in_array($var, $this->serializedKeys)) {
+	    $insertVals[] = serialize($this->{$var});
+	  } else {
 	  $insertVals[] = $this->{$var};
+	  }
 	}
 	call_user_func_array(array(self::$statementCache[$myClass]['insert'], 'bind_param'), $insertVals);
 	  self::$statementCache[$myClass]['insert']->execute();
@@ -408,7 +413,11 @@ abstract class smartObject extends anObject {
       if (is_a(self::$statementCache[$myClass]['update'], 'mysqli_stmt')) {
 	$updateVals = array($this->updateSQL['types']);
 	foreach ($this->updateSQL['vars'] as $var) {
-	  $updateVals[] = $this->{$var};
+	  if (in_array($var, $this->serializedKeys)) {
+	    $updateVals[] = serialize($this->{$var});
+	  } else {
+	    $updateVals[] = $this->{$var};
+	  }
 	}
 	call_user_func_array(array(self::$statementCache[$myClass]['update'], 'bind_param'), $updateVals);
 	  self::$statementCache[$myClass]['update']->execute();
