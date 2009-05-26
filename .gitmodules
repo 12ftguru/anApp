@@ -1,0 +1,3 @@
+[submodule "alib"]
+	path = alib
+	url = git@github.com:12ftguru/aLib.git
