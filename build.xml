@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <project name="anapp" default="main" basedir=".">
   <property file="./buildTool/build.properties" />
-  <property name="buildtool.xmldir" value="${basedir}/buildTool/xml" />
+  <property name="buildtool.xmldir" value="${anapp.distdir}/buildTool/xml" />
   <fileset dir="${anapp.distdir}" id="anapp.dist">
+    <exclude name="alib/.git/**" />
     <include name="alib/**" />
-    <exclude name="alib/.git" />
     <include name="common/**" />
     <include name="css/**" />
     <include name="docs/**" />
@@ -18,14 +18,22 @@
     <include name="login.ihtml" />
   </fileset>
 
+  <fileset dir="${anapp.distdir}" id="anapp.cleanup">
+    <include name="common/config.inc" />
+    <include name="common/dev*.inc" />
+    <include name="common/prod*.inc" />
+    <include name="common/test*.inc" />
+  </fileset>
 
   <target name="main" depends="clean, newproject" description="Creates a new anApp project.">
     <echo msg="Build Complete." />
   </target>
 
-
   <target name="clean" description="Cleans up old build files.">
     <echo msg="Cleaning up build directories..." />
+    <delete>
+      <fileset refid="anapp.cleanup" />
+    </delete>
   </target>
 
   <target name="newproject" description="Prompts user for new project parameters.">
@@ -62,8 +70,15 @@
         </replacetokens>  
       </filterchain>  
     </copy>
-
     <echo msg="Creating ${projectname} in ${projdir}" />
+    <mkdir dir="${projdir}" />
+    <copy overwrite="true" todir="${projdir}">
+      <fileset refid="anapp.dist" />
+    </copy>
+    <echo msg="Cleaning up after myself..." />
+    <delete>
+      <fileset refid="anapp.cleanup" />
+    </delete>
   </target>
   
   <target name="devsetup" description="Configure the development environment">
@@ -85,6 +100,17 @@
         </replacetokens>  
       </filterchain>  
     </copy>
+    <if>
+      <equals arg1="${devdb.installp}" arg2="y" />
+      <then>
+	<phingcall target="createdb">
+          <property name="createdb.host" value="${devdb.host}" />
+          <property name="createdb.name" value="${devdb.database}" />
+          <property name="createdb.user" value="${devdb.user}" />
+          <property name="createdb.pass" value="${devdb.pass}" />
+        </phingcall>
+      </then>
+    </if>
     <echo msg="Development Paths..." />
     <input propertyname="dev.extdir" defaultValue="${anapp.defaultextdir}">ExtJS distribution directory:</input>
     <input propertyname="dev.rootdir" defaultValue="/${projectname}/">Web Root Directory:</input>
@@ -121,6 +147,17 @@
         </replacetokens>  
       </filterchain>  
     </copy>  
+    <if>
+      <equals arg1="${proddb.installp}" arg2="y" />
+      <then>
+	<phingcall target="createdb">
+          <property name="createdb.host" value="${proddb.host}" />
+          <property name="createdb.name" value="${proddb.name}" />
+          <property name="createdb.user" value="${proddb.user}" />
+          <property name="createdb.pass" value="${proddb.pass}" />
+        </phingcall>
+      </then>
+    </if>
     <echo msg="Production Paths..." />
     <input propertyname="prod.extdir" defaultValue="${anapp.defaultextdir}">ExtJS distribution directory:</input>
     <input propertyname="prod.rootdir" defaultValue="/{$projectname}/">Web Root Directory:</input>
@@ -137,5 +174,44 @@
       </filterchain>  
     </copy>
   </target>
+
+  <target name="createdb" description="Create an empty db with dbdeploy and user tables." >
+    <pdo url="${pdo.driver}:host=${createdb.host}"
+         userId="${createdb.user}" password="${createdb.pass}"
+         onerror="abort"><![CDATA[
+    CREATE DATABASE `${createdb.name}` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+    USE ${createdb.name};
+    
+    DROP TABLE IF EXISTS `changelog`;
+    CREATE TABLE IF NOT EXISTS `changelog` (
+    change_number BIGINT NOT NULL,
+    delta_set VARCHAR(10) NOT NULL,
+    start_dt TIMESTAMP NOT NULL,
+    complete_dt TIMESTAMP NULL,
+    applied_by VARCHAR(100) NOT NULL,
+    description VARCHAR(500) NOT NULL
+    );
+
+    DROP TABLE IF EXISTS `users`;
+    CREATE TABLE IF NOT EXISTS `users` (
+    `loginName` varchar(255) CHARACTER SET utf8 NOT NULL,
+    `gn` varchar(32) DEFAULT NULL,
+    `sn` varchar(32) DEFAULT NULL,
+    `email` varchar(128) DEFAULT NULL,
+    `createDate` int(64) DEFAULT NULL,
+    `modDate` int(64) DEFAULT NULL,
+    `passwd` varchar(128) DEFAULT NULL,
+    `status` tinyint(4) NOT NULL DEFAULT '0',
+    `access` tinyint(4) NOT NULL DEFAULT '0',
+    `userID` int(10) NOT NULL AUTO_INCREMENT,
+    PRIMARY KEY (`loginName`),
+    KEY `emailSearch` (`email`(6)),
+    KEY `idnum` (`userID`)
+    ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+]]>
+    </pdo>
+  </target> 
+
 
 </project>
