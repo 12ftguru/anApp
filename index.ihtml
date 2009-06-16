@@ -12,7 +12,7 @@
     <link rel="shortcut icon" href="<?=$config->self;?>images/favicon.ico" >
     <link rel="stylesheet" type="text/css" href="<?=$extLocation;?>/resources/css/ext-all.css"  />
     <link rel="stylesheet" type="text/css" href="<?=$extLocation;?>/resources/css/xtheme-gray.css"  />
-    <link rel="stylesheet" type="text/css" href="<?=$config->self;?>styles/astyle.css"  />
+    <link rel="stylesheet" type="text/css" href="<?=$config->self;?>css/astyle.css"  />
     <script type="text/javascript" src="<?=$config->extLocation;?>/adapter/ext/ext-base.js"></script>
     <script type="text/javascript" src="<?=$config->extLocation;?>/ext-all.js"></script>
 </head>
