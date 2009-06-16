@@ -87,8 +87,8 @@
     </copy>
     <echo msg="Development Paths..." />
     <input propertyname="dev.extdir" defaultValue="${anapp.defaultextdir}">ExtJS distribution directory:</input>
-    <input propertyname="dev.rootdir" defaultValue="/{$projectname}/">Web Root Directory:</input>
-    <input propertyname="dev.appurl" defaultValue="http://127.0.0.1${dev.appurl}">Full URL:</input>
+    <input propertyname="dev.rootdir" defaultValue="/${projectname}/">Web Root Directory:</input>
+    <input propertyname="dev.appurl" defaultValue="http://127.0.0.1${dev.rootdir}">Full URL:</input>
     <copy overwrite="true"  
           file="${anapp.distdir}/common/template.pathinfo.inc"  
           tofile="${anapp.distdir}/common/dev.pathinfo.inc">  

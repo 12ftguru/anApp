@@ -7,6 +7,15 @@ if ($environment == "dev") {
   include_once('dev.dbinfo.inc');
   include_once('dev.pathinfo.inc');
 
+  $debugConfig = array(
+                       'groupByClass' => TRUE, //if output handles grouping, group logs by classname.
+                       'debugLevel' => DEBUG_LOW | DEBUG_TRACE,
+                       'handleErrors' => TRUE,
+                       'showIncludedFiles' => TRUE,
+                       'detailedOutput' => TRUE
+                       );
+
+
 } else if ($environment == "test") {
 
   include_once('test.dbinfo.inc');
