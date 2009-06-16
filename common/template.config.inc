@@ -1,25 +1,34 @@
 <?php
 
-include_once('dbinfo.inc');
-include_once('pathinfo.inc');
+$environment = "@environment@"; //dev or test or prod
+
+if ($environment == "dev") {
+
+  include_once('dev.dbinfo.inc');
+  include_once('dev.pathinfo.inc');
+
+} else if ($environment == "test") {
+
+  include_once('test.dbinfo.inc');
+  include_once('test.pathinfo.inc');
+
+} else {
+
+  include_once('prod.dbinfo.inc');
+  include_once('prod.pathinfo.inc');
+
+}
 
 /* What level is an admin user? */
 define( ANAPPADMIN, 1 );
 
-/* Are we in production? */
-$deployed = FALSE;
-
 /* Default long page title */
-$defaultTitle = '';
+$defaultTitle = '@defaulttitle@';
+
 
 /* Application name (used for cookies) */
-$appName = 'anAppTest';
+$appName = '@appname@';
 
-/* What's our root directory? */
-$self = '/anapp/';
-
-/* Full URL for our app: */
-$appURL = 'http://127.0.0.1'.$self;
 
 /* Global Templates */
 $loginTemplate = "login.ihtml";
@@ -38,10 +47,10 @@ $loginSafetyLevel = 2; //iform style safety level
 $loginExpires = 60*60*8; //8 hours
 
 /* Cookie User Key (name of cookie to store loginName in) */
-$cookieUserKey = 'anAppTestUser';
+$cookieUserKey = '@appname@User';
 
 /* Cookie Token Key (name of cookie to store auth token in) */
-$cookieTokenKey = 'anAppTestToken';
+$cookieTokenKey = '@appname@Token';
 
 /* Optional Variables used by cookieLogin */
 
@@ -69,8 +78,7 @@ $javascripts = array('../firebug/firebugx.js');
 /* Extra css files */
 $styles = array();
 
-
 /* Class called if the requested widget class can't be found. Useful for 404s, static html pages, etc. */
-$defaultWidget = 'testbutton2';
+$defaultWidget = '404';
 
 ?>

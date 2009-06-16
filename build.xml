@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+<project name="anapp" default="main" basedir=".">
+  <property file="./buildTool/build.properties" />
+  <property name="buildtool.xmldir" value="${basedir}/buildTool/xml" />
+  <fileset dir="${anapp.distdir}" id="anapp.dist">
+    <include name="alib/**" />
+    <exclude name="alib/.git" />
+    <include name="common/**" />
+    <include name="css/**" />
+    <include name="docs/**" />
+    <include name="images/**" />
+    <include name="js/**" />
+    <include name="php/**" />
+    <include name=".htaccsss" />
+    <include name="index.ihtml" />
+    <include name="index.php" />
+    <include name="LICENSE" />
+    <include name="login.ihtml" />
+  </fileset>
+
+
+  <target name="main" depends="clean, newproject" description="Creates a new anApp project.">
+    <echo msg="Build Complete." />
+  </target>
+
+
+  <target name="clean" description="Cleans up old build files.">
+    <echo msg="Cleaning up build directories..." />
+  </target>
+
+  <target name="newproject" description="Prompts user for new project parameters.">
+    <echo msg="Creating new anApp project..." />
+    <input propertyname="projectname" promptChar=":">Enter the short name for your new project</input>
+    <input propertyname="projdirrel" defaultValue="${anapp.projectdir}/${projectname}" promptChar="?">Where should your project be created</input>
+    <resolvepath propertyName="projdir" file="${projdirrel}"/>
+    <echo msg="DB Setup..." />
+    <input propertyname="dev.p" promptChar="?" validArgs="y,n">Configure a development environment?</input>
+    <if>
+      <equals arg1="${dev.p}" arg2="y" />
+      <then>
+	<phingcall target="devsetup" />
+      </then>
+    </if>
+    <input propertyname="prod.p" promptChar="?" validArgs="y,n">Configure a production environment</input>
+    <if>
+      <equals arg1="${prod.p}" arg2="y" />
+      <then>
+        <phingcall target="prodsetup" />
+      </then>
+    </if>
+    <echo msg="General Set Up" />
+    <input propertyname="anapp.defaulttitle">Default Page Title:</input>
+    <input propertyname="anapp.deployto" validArgs="dev,prod,test">Environment to initially deploy to:</input>
+    <copy overwrite="true"  
+          file="${anapp.distdir}/common/template.config.inc"  
+          tofile="${anapp.distdir}/common/config.inc">  
+      <filterchain>   
+        <replacetokens begintoken="@" endtoken="@">  
+          <token key="environment" value="${anapp.deployto}" />  
+          <token key="appname" value="${projectname}" />  
+          <token key="defaulttitle" value="${anapp.defaulttitle}" />
+        </replacetokens>  
+      </filterchain>  
+    </copy>
+
+    <echo msg="Creating ${projectname} in ${projdir}" />
+  </target>
+  
+  <target name="devsetup" description="Configure the development environment">
+    <echo msg="Development DB..." />
+    <input propertyname="devdb.host" defaultValue="localhost">Enter database host for your development environment:</input>
+    <input propertyname="devdb.user" defaultValue="dbuser">Enter database user for your development environment:</input>
+    <input propertyname="devdb.pass" defaultValue="dbpass">Enter database password for your development environment:</input>
+    <input propertyname="devdb.database" defaultValue="${projectname}db">Enter database name for your development environment:</input>
+    <input propertyname="devdb.installp" promptChar="?" validArgs="y,n">Connect to the development db and install a base schema?</input>
+    <copy overwrite="true"  
+          file="${anapp.distdir}/common/template.dbinfo.inc"  
+          tofile="${anapp.distdir}/common/dev.dbinfo.inc">  
+      <filterchain>   
+        <replacetokens begintoken="@" endtoken="@">  
+          <token key="dbhost" value="${devdb.host}" />  
+          <token key="dbuser" value="${devdb.user}" />  
+          <token key="dbpass" value="${devdb.pass}" />  
+          <token key="dbname" value="${devdb.database}" />  
+        </replacetokens>  
+      </filterchain>  
+    </copy>
+    <echo msg="Development Paths..." />
+    <input propertyname="dev.extdir" defaultValue="${anapp.defaultextdir}">ExtJS distribution directory:</input>
+    <input propertyname="dev.rootdir" defaultValue="/{$projectname}/">Web Root Directory:</input>
+    <input propertyname="dev.appurl" defaultValue="http://127.0.0.1${dev.appurl}">Full URL:</input>
+    <copy overwrite="true"  
+          file="${anapp.distdir}/common/template.pathinfo.inc"  
+          tofile="${anapp.distdir}/common/dev.pathinfo.inc">  
+      <filterchain>   
+        <replacetokens begintoken="@" endtoken="@">  
+          <token key="extdir" value="${dev.extdir}" />  
+          <token key="rootdir" value="${dev.rootdir}" />  
+          <token key="appurl" value="${dev.appurl}" />  
+        </replacetokens>  
+      </filterchain>  
+    </copy>
+  </target>
+
+  <target name="prodsetup" description="Production Environment Configuration">
+    <echo msg="Production DB..." />
+    <input propertyname="proddb.host" defaultValue="localhost">Enter database host for your production environment:</input>
+    <input propertyname="proddb.user" defaultValue="dbuser">Enter database user for your production environment:</input>
+    <input propertyname="proddb.pass" defaultValue="dbpass">Enter database password for your production environment:</input>
+    <input propertyname="proddb.database" defaultValue="${projectname}db">Enter database name for your production environment:</input>
+    <input propertyname="proddb.installp" promptChar="?" validArgs="y,n">Connect to the production db and install a base schema?</input>
+    <copy overwrite="true"  
+          file="${anapp.distdir}/common/template.dbinfo.inc"  
+          tofile="${anapp.distdir}/common/prod.dbinfo.inc">  
+      <filterchain>   
+        <replacetokens begintoken="@" endtoken="@">  
+          <token key="dbhost" value="${proddb.host}" />  
+          <token key="dbuser" value="${proddb.user}" />  
+          <token key="dbpass" value="${proddb.pass}" />  
+          <token key="dbname" value="${proddb.database}" />  
+        </replacetokens>  
+      </filterchain>  
+    </copy>  
+    <echo msg="Production Paths..." />
+    <input propertyname="prod.extdir" defaultValue="${anapp.defaultextdir}">ExtJS distribution directory:</input>
+    <input propertyname="prod.rootdir" defaultValue="/{$projectname}/">Web Root Directory:</input>
+    <input propertyname="prod.appurl" defaultValue="http://127.0.0.1${prod.appurl}">Full URL:</input>
+    <copy overwrite="true"  
+          file="${anapp.distdir}/common/template.pathinfo.inc"  
+          tofile="${anapp.distdir}/common/prod.pathinfo.inc">  
+      <filterchain>   
+        <replacetokens begintoken="@" endtoken="@">  
+          <token key="extdir" value="${prod.extdir}" />  
+          <token key="rootdir" value="${prod.rootdir}" />  
+          <token key="appurl" value="${prod.appurl}" />  
+        </replacetokens>  
+      </filterchain>  
+    </copy>
+  </target>
+
+</project>

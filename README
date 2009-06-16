@@ -1,0 +1,19 @@
+anApp BuildTool Set Up
+======================
+
+1. Be sure that the following are installed:
+   * Phing -- http://phing.info/docs/guide/current/chapters/Setup.html
+   * PHPUnit -- http://www.phpunit.de/manual/current/en/installation.html
+   * Git -- http://git-scm.com/
+2. Edit build.properties and set variables as per your local environment.
+
+
+Building a new project
+======================
+In the buildTool directory, simply type:
+
+phing
+
+And you will be asked a series of questions about your new
+project. After answering these questions, you will have a brand
+spanking new anApp project all set up for you.
