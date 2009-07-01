@@ -1,7 +1,7 @@
 Ext.override(Ext.Component, {
     /**
      * Update the component with a config similar to the creation
-     * config, except that methods may be called as well... 
+     * config, except that methods may be called as well...
      * Example:
      * {
      *   property1: 'value',
@@ -10,7 +10,7 @@ Ext.override(Ext.Component, {
      *               arguments: [arg1, arg2, arg3],
      *               scope: 'id-of-other-component'
      *              }
-     * Note, you cannot chain functions (myComponent.methodOne().methodTwo() 
+     * Note, you cannot chain functions (myComponent.methodOne().methodTwo()
      * @methodOf Ext.Component
      * @name Ext.Component#updateComponent
      * @return {void}
@@ -86,22 +86,24 @@ Ext.apply(Ext.ComponentMgr, {
      * @methodOf Ext.ComponentMgr
      * @name Ext.ComponentMgr#monitorAjaxResponseHandler
      */
-    monitorAjaxResponseHandler: function(connection, response, requestOptions) {
-	var obj;
-	if (response.responseText) {
-		if (response.responseText.substr(0,1) == '{') {
-	    	    obj = Ext.util.JSON.decode(response.responseText);
-		}
-	} else {
-	    obj = response;
-	}
-	if (obj.create) {
-	    Ext.ComponentMgr.createComponents(obj.create);
-	}
-	if (obj.update) {
-	    Ext.ComponentMgr.updateComponents(obj.update);
-	}
-    },
+   monitorAjaxResponseHandler: function(connection, response, requestOptions) {
+     var obj;
+     if (response.responseText) {
+       if (response.responseText.substr(0,1) == '{') {
+	 obj = Ext.util.JSON.decode(response.responseText);
+       }
+     } else {
+       obj = response;
+     }
+     if (obj) {
+       if (obj.create) {
+	 Ext.ComponentMgr.createComponents(obj.create);
+       }
+       if (obj.update) {
+	 Ext.ComponentMgr.updateComponents(obj.update);
+       }
+     }
+   },
     /**
 
      * Updates a set of components via an update config:
@@ -136,7 +138,7 @@ Ext.apply(Ext.ComponentMgr, {
 	} else {
 	    this.types.on("add", function(idx, obj, key) {
 		fn.call(scope || key, key);
-	    }, this, {single: true}); 
+	    }, this, {single: true});
         }
     },
 

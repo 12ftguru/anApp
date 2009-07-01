@@ -53,13 +53,13 @@ anApp = function(){
 	if (this.loadDependencies) {
 	  this.autoLoadRemote('dependencies', false);
 	}
-	if (this.preloadModules.length > 0) {
-	for (var i = 0; i < this.preloadModules.length; i++) {
+        if (this.preloadModules.length > 0) {
+          for (var i = 0; i < this.preloadModules.length; i++) {
 	    this.autoLoadRemote(this.preloadModules[i], true);
-	}
-	} else {
-	    this.fireEvent('loaded');
-	}
+	  }
+        } else {
+          this.fireEvent('loaded');
+        }
     },
 	autoLoadRemote: function(module, css) {
 	    Ext.ComponentMgr.loadRemote(module, css, this);
