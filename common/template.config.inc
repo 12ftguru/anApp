@@ -106,4 +106,27 @@ $styles = array();
 /* Class called if the requested widget class can't be found. Useful for 404s, static html pages, etc. */
 $defaultWidget = '404';
 
+/* API Configuration */
+$apiName = 'anApp'; 
+$apiDescriptor = 'anApp.API';
+
+/* Publicly available API Classes */
+$publicAPIMethods = array(
+  //  'noteAPI' => array(
+  //  'serverName' => 'Note'
+  // ),
+);
+
+/* All API classes (private) */
+$apiMethods = array(
+  //  'noteAPI' => array(
+  //  'serverName' => 'Note'
+  // ),
+);
+
+if ($environment == "dev") {
+  $apiMethods['testAPI'] = array(
+    'serverName' => 'Test'
+  );
+}
 ?>

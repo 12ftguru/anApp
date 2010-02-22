@@ -1,26 +1,29 @@
 <?php
-$debugLevel = 6;
-$debugStyle = 'firebug';
+//error_reporting(E_ALL);
+//ini_set('display_errors',1);
+ini_set('always_populate_raw_post_data', 1);
+
 $configFile = 'common/config.inc';
-include_once("./alib/alib.inc");
+include_once("../alib/alib.inc");
 global $debug, $config;
 
-$debug->debug('Adding paths...', 10);
-addIncludePath('./alib');
+addIncludePath('../alib');
 addIncludePath('./common');
 addIncludePath('./php', TRUE);
-
-$debug->debug('Adding mandatory includes...', 10);
-include_once( './alib/iuser.inc' );
+include_once( '../alib/iuser.inc' );
 include_once( './common/functions.inc' );
 include_once( './common/login.inc' );
+include_once( './common/smartObjectDefs.inc' );
+include_once('./php/class.numbertoword.php');
 
 // Connect to the db:
 if ( ! is_object($db) ) {
   $db = new idb($config->mainDB);                
 }
+D::log('db');
+D::v($db);
 
-$debug->debug('Creating login object '.$config->loginModule, 10);
+
 $login = new $config->loginModule;
 
 
@@ -28,16 +31,16 @@ $login = new $config->loginModule;
 
 if ( $login->loggedIn || $config->allowNonLoggedIn ) {
     global $user, $broker;
-    $debug->debug('User logged in: %s', $user->loginName, 3);
-    $broker = new broker(); 
+$broker = new broker(); 
+} elseif (stristr($_SERVER['REQUEST_URI'], 'api')) {
+  $api = new publicAPI();
 } else {
-    $debug->debug('No user logged in: %s', $login, 3);
     $template = new template($config->loginTemplate);
     $template->set('title', $config->defaultTitle);
     $template->set('appName', $config->appName);
     $template->set('extLocation', $config->extLocation);
     $template->set('self', $config->self);
-    if ( $login->error ) {
+    if ( $login->error && $login->error != 'Not logged in and not trying to log in.') {
         $template->set('badLogin', TRUE);
 	$template->set('loginError', $login->error);
     }

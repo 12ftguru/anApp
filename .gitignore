@@ -1,0 +1,21 @@
+#Who keeps adding this?
+.DS_Store
+
+# Emacs backup files
+*~
+sematic.cache
+
+# Local dev configs:
+dev.*
+
+# Ignore temp files:
+*.tmp
+
+# Ignore bak files:
+*.bak
+
+# API Cache
+api/cache/*
+
+# Notes
+notes.org
