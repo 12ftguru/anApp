@@ -1,35 +1,7 @@
 <?php
 
-/* Exception Handling. Your exceptions will appear in Firebug: */
-
-/**
-  * Custom Exception Handler
-  *
-  * @param Exception $e
-  * @return none
-  */
-function brokerExceptionHandler( Exception $e ) {
-    global $debug, $user;
-    $debug->level = ($debug->level > 1)?$debug->level:1;
-    $debug->exception($e);
-    if ( $debug->level > 0 && $user->access == ANAPPADMIN) {
-        $output = array('success' => TRUE);
-        $output['updateItems']['items'][] = array('id' => 'debugGrid',
-                                                  'debugRecords' => $debug->dump_anAppJSON());
-        $output = json_encode($output);
-        $output = preg_replace('/"action:([^\"]+)"/', '$1', $output);
-        print $output;
-        $debug->level = 0;
-        
-    }              
-    exit;
-}
-
 global $login;
 
-if ( $login->loggedIn ) {
-    set_exception_handler( 'brokerExceptionHandler' );
-}
 
 class BrokerException extends Exception { }
 class BrokerMissingWidgetException extends BrokerException { }
@@ -54,21 +26,14 @@ class broker extends anObject
      */
     function __construct() {
         /* First see if our file exists and isn't in the excluded array. */
-      global $user, $config, $debug, $db, $login;
-            
+      global $user, $config, $db, $login;
+
         list($uri, $cruft) = explode('?', $_SERVER['REQUEST_URI']);
 
         $fileInfo = explode('/', rtrim($uri, '/'));
-        $debug->debug('Checking url %s %s', $uri, $fileInfo, 3);
+        
 
 	    if ( $uri == $config->self ) {
-                if ( $debug->level == 0 && $user->access == ANAPPADMIN && !$config->deployed) {
-                    $debug->level = 1;
-                    $debug->line('anApp loaded, admin user detected, dev environment detected.',1);
-                    $debug->showFiles(1);
-                    
-                }
-                $debug->debug('Requested index, serving template %s', $config->loggedInTemplate,2);
                 $template = new template($config->loggedInTemplate);
                 $template->set('config',$config);
                 $template->set('user',$user);
@@ -82,7 +47,7 @@ class broker extends anObject
        
             }
 
-        if(file_exists($_SERVER['DOCUMENT_ROOT'].$uri) and ($_SERVER['SCRIPT_FILENAME']!=$_SERVER['DOCUMENT_ROOT'].$_SERVER['REQUEST_URI']) and ($_SERVER['REQUEST_URI']!="/") and !preg_match($this->forbiddenExtensionsRegex, $_SERVER['REQUEST_URI'])){
+	    if(file_exists($_SERVER['DOCUMENT_ROOT'].$uri) and ($_SERVER['SCRIPT_FILENAME']!=$_SERVER['DOCUMENT_ROOT'].$_SERVER['REQUEST_URI']) and ($_SERVER['REQUEST_URI']!="/") and !preg_match($this->forbiddenExtensionsRegex, $_SERVER['REQUEST_URI']) and !is_dir($_SERVER['DOCUMENT_ROOT'].$uri)){
             $array = explode("/", $_SERVER['SCRIPT_NAME']);
             $path1 = $_SERVER['DOCUMENT_ROOT'].$uri."/".$array[count($array)-1];
             $path2 = preg_replace('/\/\//', '/', $path1);
@@ -113,14 +78,13 @@ class broker extends anObject
             exit;
                             
             } else {
-                $debug->level = -1;
+                
                 include( $_SERVER['DOCUMENT_ROOT'].$uri );
                 exit();
             }
         }
 
         /* Check to see if we have a widget... */
-            $debug->debug('Checking fileInfo: %s', $uri, 3);
             
         if ( preg_match('/\/[A-Za-z0-9]+(\/)*$/', $uri ) && !preg_match('/permalink\/[A-Za-z]+\/[0-9]+(\/)*$/', $uri)) {
 	  if ($config->defaultWidget != '') {
@@ -128,15 +92,15 @@ class broker extends anObject
 	    $oldLev = error_reporting(0);
 	    global $widgetName;
 	    $widgetName = $fileInfo[count($fileInfo)-1];
-	    $debug->debug('Including %s',$widgetName,3); 
-            $widget = new $widgetName;
+	    D::log('Attempting to include: '.$widgetName);
+	    include_once($widgetName.".inc");
 	    restore_error_handler();
 	    error_reporting($oldLev);
+	    $widget = new $widgetName;
             $widget->display();
             exit;
 	  } else {
-	    $debug->debug('Including %s',$fileInfo[count($fileInfo)-1],3); 
-            $widget = new $fileInfo[count($fileInfo)-1];
+	    $widget = new $fileInfo[count($fileInfo)-1];
             $widget->display();
 	    exit;
 	  }
@@ -163,9 +127,10 @@ class broker extends anObject
 
 function defaultWidget($n, $s, $f, $l, $c) {
   if ($n > E_WARNING) {
-    return;
+    print "anApp PHP Error: ".$s." in $f ($l)<br />";
+    return FALSE;
   }
-  global $config, $debug, $widgetName;
+  global $config, $widgetName;
   $widget = new $config->defaultWidget($widgetName);
   $widget->display();
   exit;
