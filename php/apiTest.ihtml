@@ -1,0 +1,50 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>anApp API Test Page</title>
+    <link rel="stylesheet" type="text/css" href="<?=$extLocation;?>/resources/css/ext-all.css"  />
+    <link rel="stylesheet" type="text/css" href="<?=$extLocation;?>/resources/css/xtheme-gray.css"  />
+    <script type="text/javascript" src="<?=$config->extLocation;?>/adapter/ext/ext-base.js"></script>
+    <script type="text/javascript" src="<?=$config->extLocation;?>/ext-all-debug.js"></script>
+  </head>
+<body>
+<p>Once the page has loaded, you should be able to interactively test your API Calls via your Firebug console. Below are the API thingies we have knowledge of.</p>
+<div id="apiDump">
+</div>
+<div id="hideme"  class="x-layout-inactive-content" ></div>
+  <script type="text/javascript" src="js/firebugx.js"></script>
+  <script type="text/javascript" src="<?=$config->appURL;?>api/?dc=<?=time();?>"></script>
+  <script type="text/javascript">
+// reference local blank image
+Ext.BLANK_IMAGE_URL = '<?=$extLocation;?>/resources/images/default/s.gif';
+console.log();
+Ext.onReady(function () {
+var dumpAPI = function(apiObj){
+  var apiString = '';
+  if(apiObj.constructor == Array || apiObj.constructor == Object){
+    apiString += "<ul>";
+    for(var p in apiObj){
+      if(apiObj[p].constructor == Array||
+         apiObj[p].constructor == Object){
+           apiString += "<li>["+p+"] => "+typeof(apiObj)+"</li>";
+           apiString += "<ul>";
+           apiString += dumpAPI(apiObj[p]);
+           apiString += "</ul>";
+      } else {
+           apiString += "<li>["+p+"] => "+apiObj[p]+"</li>";
+      }
+    }
+    apiString += "</ul>";
+  }
+  return apiString;
+}
+
+
+    Ext.Direct.addProvider(<?=$config->apiDescriptor;?>);
+    console.log('API %o %o', <?=$config->apiName;?>, Ext.Direct);
+    Ext.fly('apiDump').update(dumpAPI(<?=$config->apiDescriptor;?>));
+    
+});
+  </script>
+</body>
+</html>

@@ -1,5 +1,4 @@
 <?PHP
-
 class testAPI {
 
   /**
@@ -12,6 +11,31 @@ class testAPI {
       'post' => $post
     );
     return $retval;
+  }
+
+  /**
+   * @remotable
+   */
+  public function directRead($smartObject, $where = '1') {
+    public $db, $config, $user;
+    if ($user->access == ANAPPADMIN) {
+      $f = smartObjectFactory::getInstance($db);
+      $res = $f->$smartObject()->where($where);
+      $data = array();
+      while ($row = $res->fetch()) {
+        $data[] = $row->vars;
+      }
+      return array(
+        'success' => TRUE,
+        'data' => $data, 
+        'args' => array(
+          'smartObject' => $smartObject, 
+          'where' => $where
+        )
+      );
+    } else {
+      return array('success' => FALSE, 'error' => "Not allowed.");
+    }
   }
 
   /**
