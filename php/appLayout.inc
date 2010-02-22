@@ -18,6 +18,8 @@ class appLayout extends aWidget
 	$retval = array('success' => TRUE);
 	$retval['appLayout'] = array(
 				     'layout' => 'border',
+                                     'height' => 550,
+                                     'width' => 700,
 				     'items' => array(
 						      array(
 							    'region' => 'center',
@@ -25,19 +27,12 @@ class appLayout extends aWidget
 							    'id' => 'centerDesktop'
 							    ),
 						      array(
-							    'region' => 'north',
-							    'html' => 'anApp 3.0 test app',
-							    'collapsible' => TRUE
-							    ),
-						      array(
 							    'region' => 'east',
 							    'html' => 'Here',
 							    'title' => 'East',
 							    'id' => 'eastpanel',
 							    'collapsible' => TRUE,
-							    'width' => 300,
-							    'tbar' => array('action:anApp.testButton1', 'action:anApp.testButton2', 'action:anApp.testButton3')
-
+							    'width' => 300
 							    )
 						      )
 				     );

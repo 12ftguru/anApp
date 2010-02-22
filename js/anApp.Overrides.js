@@ -30,18 +30,6 @@ Ext.override(Ext.Component, {
     }
 });
 
-Ext.override(Ext.layout.CardLayout, {
-	      onLayout : function(ct, target){
-		Ext.layout.CardLayout.superclass.onLayout.call(this, ct, target);
-		this.container.setActiveItem = function(item) {
-		  if (this.layout) {
-		    this.layout.setActiveItem(item);
-		  } else {
-		    this.setActiveItem(item);
-		  }
-		};
-	      }
-	     });
 
 
 Ext.apply(Ext.ComponentMgr, {
@@ -65,7 +53,6 @@ Ext.apply(Ext.ComponentMgr, {
          * Private cache of loaded xtypes (we only load once, this is to avoid a race condition).
          */
 	types: new Ext.util.MixedCollection(),
-    groups: new Ext.util.MixedCollection(),
         loading: 0,
    /**
     * Instruct the ComponentMgr to toggle monitoring of ajax responses for
@@ -99,24 +86,24 @@ Ext.apply(Ext.ComponentMgr, {
      * @methodOf Ext.ComponentMgr
      * @name Ext.ComponentMgr#monitorAjaxResponseHandler
      */
-    monitorAjaxResponseHandler: function(connection, response, requestOptions) {
-	var obj;
-	if (response.responseText) {
-		if (response.responseText.substr(0,1) == '{') {
-	    	    obj = Ext.util.JSON.decode(response.responseText);
-		}
-	} else {
-	    obj = response;
-	}
-	if (obj) {
-	if (obj.create) {
-	    Ext.ComponentMgr.createComponents(obj.create);
-	}
-	if (obj.update) {
-	    Ext.ComponentMgr.updateComponents(obj.update);
-	}
-	}
-    },
+   monitorAjaxResponseHandler: function(connection, response, requestOptions) {
+     var obj;
+     if (response.responseText) {
+       if (response.responseText.substr(0,1) == '{') {
+	 obj = Ext.util.JSON.decode(response.responseText);
+       }
+     } else {
+       obj = response;
+     }
+     if (obj) {
+       if (obj.create) {
+	 Ext.ComponentMgr.createComponents(obj.create);
+       }
+       if (obj.update) {
+	 Ext.ComponentMgr.updateComponents(obj.update);
+       }
+     }
+   },
     /**
 
      * Updates a set of components via an update config:
@@ -155,16 +142,6 @@ Ext.apply(Ext.ComponentMgr, {
         }
     },
 
-    /**
-     * Gets a group of components by groupID
-     * @param {String} groupID The groupID in question
-     * @return {MixedCollection} Matching items
-     */
-
-    getGroup: function(groupID) {
-	return Ext.ComponentMgr.groups.filter('groupID', groupID, false, true);
-    }
-
 
         /**
          * Registers a new Component constructor, keyed by a new
@@ -199,18 +176,12 @@ Ext.apply(Ext.ComponentMgr, {
 		var parentCmp = Ext.getCmp(components[i].parentID);
 		try {
 		    var cmp = parentCmp.add(components[i]);
-		    if (cmp.groupID) {
-			Ext.ComponentMgr.groups.add(cmp);
-		    }
 		} catch (err) {
 		    Ext.ComponentMgr.loadRemote(components[i]);
 		}
 	    } else if (components[i].xtype) {
 		try {
-		    var cmp = Ext.ComponentMgr.create(components[i]);
-		    if (cmp.groupID) {
-			Ext.ComponentMgr.groups.add(cmp);
-		    }
+		    Ext.ComponentMgr.create(components[i]);
 		} catch (err) {
 		    Ext.ComponentMgr.loadRemote(components[i]);
 		}

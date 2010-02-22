@@ -28,13 +28,18 @@ abstract class aWidget {
      * 
      */
      function json($output) {
-         global $debug, $user;
-         $debug->level = 0;
+       global $user, $config;
+         
          $output = $this->recursiveUnHtmlize($output);
          $output = json_encode($output);
          $output = preg_replace('/"action:([^\"]+)"/', '$1', $output);
-         print $output;
-         exit;
+	 if ($config->environment != 'test') {
+	   header("Content-type: application/json");
+	   print $output;
+	   exit;
+	 } else {
+	   return $output;
+	 }
      }
 
 
