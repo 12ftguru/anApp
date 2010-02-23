@@ -27,13 +27,14 @@ abstract class aWidget {
      * Exports JSON
      * 
      */
-     function json($output) {
+    function json($output, $utfSafe = FALSE, $exit = TRUE) {
        global $user, $config;
          
          $output = $this->recursiveUnHtmlize($output);
+         if ($utfSafe) { $output = array_map(utf8_encode, $output); }
          $output = json_encode($output);
          $output = preg_replace('/"action:([^\"]+)"/', '$1', $output);
-	 if ($config->environment != 'test') {
+	 if ($config->environment != 'test' && $exit) {
 	   header("Content-type: application/json");
 	   print $output;
 	   exit;

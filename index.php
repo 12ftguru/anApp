@@ -4,17 +4,16 @@
 ini_set('always_populate_raw_post_data', 1);
 
 $configFile = 'common/config.inc';
-include_once("../alib/alib.inc");
+include_once("./alib/alib.inc");
 global $debug, $config;
 
-addIncludePath('../alib');
+addIncludePath('./alib');
 addIncludePath('./common');
 addIncludePath('./php', TRUE);
 include_once( '../alib/iuser.inc' );
 include_once( './common/functions.inc' );
 include_once( './common/login.inc' );
 include_once( './common/smartObjectDefs.inc' );
-include_once('./php/class.numbertoword.php');
 
 // Connect to the db:
 if ( ! is_object($db) ) {

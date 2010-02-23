@@ -10,8 +10,8 @@ abstract class loginPrototype extends anObject {
 class dummyLogin extends loginPrototype {
   
   public function __construct() {
-    global $user, $debug;
-    $user = new iuser(array(
+    global $user;
+    $user = new artemisUser(array(
 			    'userID' => 0,
 			    'loginName' => 'none',
 			    'gn' => 'Dummy',
@@ -19,8 +19,6 @@ class dummyLogin extends loginPrototype {
 			    'access' => 1,
 			    'status' => 1
 			    )); //fake user.
-    $debug->debug('New User',6);
-    $debug->debug($user, 6);
     $this->loggedIn = TRUE;
     $this->error = 'Dummy User.';
   }
