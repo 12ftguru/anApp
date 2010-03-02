@@ -5,7 +5,7 @@
 
 class cookieLogin extends loginPrototype {
   public function __construct() {
-    global $user, $debug, $config;
+    global $user, $config;
     // Set us up some vars: 
     $loginSafety = ($config->loginSafetyLevel)?$config->loginSafetyLevel:2; //iform level
     $cookieUser = ($config->cookieUserKey)?$config->cookieUserKey:$config->appName.'User';
@@ -21,15 +21,10 @@ class cookieLogin extends loginPrototype {
     $form->filter->$cookieToken( FILTER_SANITIZE_STRING, FILTER_FLAG_ENCODE_AMP );
     $form->filter->logout( FILTER_VALIDATE_BOOLEAN );
 
-    $debug->debug('Performing Auth', 5);
-    $debug->debug($form,5);
-      $debug->debug($_COOKIE,5);
     // Now we check to see what's going on. First, did we just logout?
     // If so, remove the cookies then reload the page.
     if ($form->logout) {
-      $debug->debug('Logging out',5);
       $this->CookieLogout($cookieUser,$cookieToken);
-      $debug->level = 0;
       $reloadURL = ($config->logoutURL)?$config->logoutURL:$config->appURL;
       header("Location: ".$reloadURL);
       exit;
@@ -41,7 +36,6 @@ class cookieLogin extends loginPrototype {
       // Else we should check form auth
       $this->FormAuth($form);
     } else {
-      $debug->debug('No Auth:', 5);
       // Not logged in and not trying to log in.
       $this->loggedIn = FALSE;
       $this->error = '';
@@ -49,7 +43,7 @@ class cookieLogin extends loginPrototype {
   }
 
   public function FormAuth($form) {
-    global $config, $user, $debug;
+    global $config, $user, $db;
     $cookieExpiry = ($config->loginExpires)?$config->loginExpires:(8*60*60); //default 8 hours from now.
     $cookieUser = ($config->cookieUserKey)?$config->cookieUserKey:$config->appName.'User';
     $cookieToken = ($config->cookieTokenKey)?$config->cookieTokenKey:$config->appName.'Token';
@@ -58,11 +52,16 @@ class cookieLogin extends loginPrototype {
     $cookieSecure = ($config->cookieSecure)?$config->cookieSecure:FALSE;
     $salt = ($config->cookieSalt)?$config->cookieSalt:'anAppLoginCookieSalt';
 
-    $sql = "select * from `users` where (`loginName` = '".$form->username."' OR `email` = '".$form->username."') AND `passwd` = PASSWORD('".$form->password."')";
-    $debug->debug('Cookie Auth User SQL: '.$sql, 6);
-    $users = iuserFactory::query($sql);
+    $sql = " (`loginName` = '".$form->username."' OR `email` = '".$form->username."') AND `passwd` = PASSWORD('".$form->password."')";
+    $factory = smartObjectFactory::getInstance($db);
+    $users = $factory->iuser()->where($sql)->f();
     if ($users->num_rows == 1) {
-      $user = $users->fetch();
+      D::log("0 User object:", "LOG", "CookieLogin");
+      $user = $users[0];
+      D::variable($user, "VARIABLE", "CookieLogin");
+      D::log("0 User resultset:", "LOG", "CookieLogin");
+      D::variable($users, "VARIABLE", "CookieLogin");
+      
       $this->loggedIn = TRUE;
       //Set cookies:
       $passwordHash = md5($form->username.$user->passwd.$salt);
@@ -83,7 +82,7 @@ class cookieLogin extends loginPrototype {
   }
 
   public function CookieAuth($form) {
-    global $config, $user, $debug;
+    global $config, $user, $db;
     $cookieExpiry = ($config->loginExpires)?$config->loginExpires:(8*60*60); //default 8 hours from now.
     $cookieUser = ($config->cookieUserKey)?$config->cookieUserKey:$config->appName.'User';
     $cookieToken = ($config->cookieTokenKey)?$config->cookieTokenKey:$config->appName.'Token';
@@ -91,11 +90,15 @@ class cookieLogin extends loginPrototype {
     $cookieDomain = ($config->cookieDomain)?$config->cookieDomain:"";
     $cookieSecure = ($config->cookieSecure)?$config->cookieSecure:FALSE;
     $salt = ($config->cookieSalt)?$config->cookieSalt:'anAppLoginCookieSalt';
-    $sql = "select * from `users` where (`loginName` = '".$form->$cookieUser."' OR `email` = '".$form->$cookieUser."') AND MD5(CONCAT('".$form->$cookieUser."', `passwd`, '".$salt."')) = '".$form->$cookieToken."'";
-    $debug->debug('Cookie Auth User SQL: '.$sql, 6);
-    $users = iuserFactory::query($sql);
+    $sql = " (`loginName` = '".$form->$cookieUser."' OR `email` = '".$form->$cookieUser."') AND MD5(CONCAT('".$form->$cookieUser."', `passwd`, '".$salt."')) = '".$form->$cookieToken."'";
+    $factory = smartObjectFactory::getInstance($db);
+    $users = $factory->iuser()->where($sql)->f();
     if ($users->num_rows == 1) {
-      $user = $users->fetch();
+    	D::log("1 User object:", "LOG", "CookieLogin");
+      $user = $users[0];
+      D::variable($user, "VARIABLE", "CookieLogin");
+      D::log("1 User resultset:", "LOG", "CookieLogin");
+      D::variable($users, "VARIABLE", "CookieLogin");
       $this->loggedIn = TRUE;
       //Update session expiry:
       setcookie($cookieUser, $form->$cookieUser, time() + $cookieExpiry, $cookiePath, $cookieDomain, $cookieSecure);
@@ -122,5 +125,4 @@ class cookieLogin extends loginPrototype {
   }
 
 }
-
 ?>

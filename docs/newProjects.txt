@@ -3,11 +3,12 @@ Here are the git commands to create a new anApp project that tracks changes made
 First, create a new empty github repo for your new project. Here we call it "myproject". Then:
 
 > git clone http://github.com/12ftguru/anApp.git myproject
+> cd myproject
 > git remote rm origin
-> git add origin <your github private clone url, the read/write one>
+> git remote add origin <your github private clone url, the read/write one>
 > git config branch.master.remote origin
 > git config branch.master.merge refs/heads/master
-> git push
+> git push origin master
 
 Basically, we clone anApp, the tell git that anApp isn't the base repo, our new empty one is. Then we push the anApp code to our new repo.
 

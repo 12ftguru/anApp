@@ -11,8 +11,10 @@ if ($environment == "dev") {
                        'groupByClass' => FALSE, //if output handles grouping, group logs by classname.
                        'debugLevel' => DEBUG_LOW | DEBUG_TRACE,
                        'handleErrors' => TRUE,
-                       'showIncludedFiles' => TRUE,
-                       'detailedOutput' => TRUE
+                       'reportErrors' => E_ERROR|E_PARSE,
+                       'showIncludedFiles' => FALSE,
+                       'detailedOutput' => TRUE,
+                       'outputHandler' => 'firePHP'
                        );
 
 
