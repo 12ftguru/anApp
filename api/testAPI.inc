@@ -15,12 +15,13 @@ class testAPI {
 
   /**
    * @remotable
+   * @remoteName read
    */
-  public function directRead($smartObject, $where = '1') {
-    public $db, $config, $user;
-    if ($user->access == ANAPPADMIN) {
+  public function directRead($smartObject = FALSE, $where = '1') {
+    global $db, $config, $user;
+    if ($user->access == ANAPPADMIN && $smartObject !== FALSE) {
       $f = smartObjectFactory::getInstance($db);
-      $res = $f->$smartObject()->where($where);
+      $res = $f->$smartObject()->where($where)->query();
       $data = array();
       while ($row = $res->fetch()) {
         $data[] = $row->vars;
@@ -34,12 +35,22 @@ class testAPI {
         )
       );
     } else {
-      return array('success' => FALSE, 'error' => "Not allowed.");
+      return array(
+        'success' => FALSE,
+        'error' => "Not allowed.",
+        'args' => array(
+          'smartObject' => $smartObject, 
+          'where' => $where,
+          'admin' => ANAPPADMIN,
+          'user' => $user->access
+        )
+      );
     }
   }
 
   /**
    * @remotable
+   * @remoteName echo
    */
   public function directEcho($data) {
     return $data;

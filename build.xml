@@ -11,7 +11,8 @@
     <include name="images/**" />
     <include name="js/**" />
     <include name="php/**" />
-    <include name=".htaccsss" />
+    <include name="api/**" />
+    <include name=".htaccess" />
     <include name="index.ihtml" />
     <include name="index.php" />
     <include name="LICENSE" />
@@ -25,7 +26,7 @@
     <include name="common/test*.inc" />
   </fileset>
 
-  <target name="main" depends="clean, newproject" description="Creates a new anApp project.">
+  <target name="main" depends="newproject" description="Creates a new anApp project.">
     <echo msg="Build Complete." />
   </target>
 
@@ -39,8 +40,7 @@
   <target name="newproject" description="Prompts user for new project parameters.">
     <echo msg="Creating new anApp project..." />
     <input propertyname="projectname" promptChar=":">Enter the short name for your new project</input>
-    <input propertyname="projdirrel" defaultValue="${anapp.projectdir}/${projectname}" promptChar="?">Where should your project be created</input>
-    <resolvepath propertyName="projdir" file="${projdirrel}"/>
+    <resolvepath propertyName="projdir" file="."/>
     <echo msg="DB Setup..." />
     <input propertyname="dev.p" promptChar="?" validArgs="y,n">Configure a development environment?</input>
     <if>
@@ -70,15 +70,8 @@
         </replacetokens>  
       </filterchain>  
     </copy>
-    <echo msg="Creating ${projectname} in ${projdir}" />
-    <mkdir dir="${projdir}" />
-    <copy overwrite="true" todir="${projdir}">
-      <fileset refid="anapp.dist" />
-    </copy>
+    <echo msg="Initial configuration of ${projectname} is complete." />
     <echo msg="Cleaning up after myself..." />
-    <delete>
-      <fileset refid="anapp.cleanup" />
-    </delete>
   </target>
   
   <target name="devsetup" description="Configure the development environment">
@@ -152,7 +145,7 @@
       <then>
 	<phingcall target="createdb">
           <property name="createdb.host" value="${proddb.host}" />
-          <property name="createdb.name" value="${proddb.name}" />
+          <property name="createdb.name" value="${proddb.database}" />
           <property name="createdb.user" value="${proddb.user}" />
           <property name="createdb.pass" value="${proddb.pass}" />
         </phingcall>

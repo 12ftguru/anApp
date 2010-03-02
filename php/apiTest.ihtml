@@ -38,8 +38,19 @@ var dumpAPI = function(apiObj){
   return apiString;
 }
 
-
+    if (! <?=$config->apiDescriptor;?>.id) {
+       <?=$config->apiDescriptor;?>.id = 'test';
+    }
     Ext.Direct.addProvider(<?=$config->apiDescriptor;?>);
+    var prov = Ext.Direct.getProvider(<?=$config->apiDescriptor;?>.id);
+    prov.on('data', function(provider, event) {
+       if(!event.status || (event.result && event.result.success === false)) {
+           console.error('Unsuccessful API Call for %o: %o', provider, event);
+       } else {
+           console.log('Data Received from %o: %o', provider, event);
+       }
+    });
+
     console.log('API %o %o', <?=$config->apiName;?>, Ext.Direct);
     Ext.fly('apiDump').update(dumpAPI(<?=$config->apiDescriptor;?>));
     
