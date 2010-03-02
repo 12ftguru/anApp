@@ -11,7 +11,7 @@ class dummyLogin extends loginPrototype {
   
   public function __construct() {
     global $user;
-    $user = new artemisUser(array(
+    $user = new iuser(array(
 			    'userID' => 0,
 			    'loginName' => 'none',
 			    'gn' => 'Dummy',
