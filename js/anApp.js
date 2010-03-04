@@ -35,7 +35,6 @@ anApp = function(){
 	    Ext.ComponentMgr.allowCSSRemoteLoad = true;
 	    Ext.ComponentMgr.remoteLoadBaseURL = this.moduleURLPrefix;
 	}
-	Ext.ComponentMgr.monitorAjax();
 
 	if (this.appLayout) {
 	    this.on('loaded', function() {
@@ -49,6 +48,8 @@ anApp = function(){
 		};
 		Ext.Ajax.request(req);
 	    }, this, { single: true });
+	} else {
+	    Ext.ComponentMgr.monitorAjax();
 	}
 	if (this.loadDependencies) {
 	  this.autoLoadRemote('dependencies', false);
@@ -74,14 +75,28 @@ anApp = function(){
 	    } else {
 		r = response;
 	    }
+		console.info('Response: %o',r);
 	    if (r.appLayout) {
 		this.layout = new Ext.Viewport(r.appLayout);
 		this.fireEvent('createlayout', r.appLayout, this);
+		if (this.layout.rendered) {
+		    this.fireEvent('applayout', this);
+		} else {
 		this.layout.on('show', function(e) {
 		    this.fireEvent('applayout', this);
 		}, this);
+		}
 	    }
+		if (r.create) {
+	    Ext.ComponentMgr.createComponents(r.create);
+		    r.create = {};
+		}
+		if (r.update) {
+	    Ext.ComponentMgr.updateComponents(r.update);
+		    r.update = {};
+		}
 	}
+	Ext.ComponentMgr.monitorAjax();
 	}
 	/* End Public Properties/Methods */
     })
