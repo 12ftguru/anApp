@@ -172,7 +172,7 @@
     <pdo url="${pdo.driver}:host=${createdb.host}"
          userId="${createdb.user}" password="${createdb.pass}"
          onerror="abort"><![CDATA[
-    CREATE DATABASE `${createdb.name}` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+    CREATE DATABASE IF NOT EXISTS `${createdb.name}` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 
     USE ${createdb.name};
     
